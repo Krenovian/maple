@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("EMPLOYEE") // ADMIN or EMPLOYEE
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  description     String
+  category        String   @default("Residential")
+  location        String
+  area            String?
+  year            String?
+  image           String
+  imageAlt        String?
+  images          String?  // JSON array of image paths
+  featured        Boolean  @default(false)
+  status          String   @default("Completed")
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tasks           Task[]
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String
+  category        String
+  price           String?
+  image           String
+  imageAlt        String?
+  images          String?  // JSON gallery
+  specs           String?  // JSON [{label,value}]
+  leadTime        String?  // e.g. "2–3 weeks"
+  inStock         Boolean  @default(true)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  inquiries       Inquiry[]
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  status    String   @default("NEW") // NEW, CONTACTED, CLOSED
+  createdAt DateTime @default(now())
+}
+
+model OrderLead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  note      String?
+  items     String   // JSON array of cart line items
+  totalHint String?  // optional display total from listed prices
+  source    String   @default("cart") // cart | enquire
+  status    String   @default("NEW") // NEW, CONTACTED, CLOSED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    String   @default("UNREAD") // UNREAD, READ, REPLIED
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  priority    String    @default("MEDIUM")  // LOW, MEDIUM, HIGH
+  dueDate     DateTime?
+  assigneeId  String?
+  assignee    User?     @relation(fields: [assigneeId], references: [id])
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+  projectName String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorName String?
+  action    String   // CREATE, UPDATE, DELETE, STATUS
+  entity    String   // project, product, orderLead, inquiry, contactMessage, task, category
+  entityId  String?
+  summary   String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // PRODUCT | PROJECT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([type, name])
+}
