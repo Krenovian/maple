@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { requireStaff } from '@/lib/admin';
-import { getCloudinary, isCloudinaryConfigured } from '@/lib/cloudinary';
+import {
+  deleteUploadedImages,
+  isManagedUploadUrl,
+  saveUploadedImage,
+} from '@/lib/localUploads';
 
 export const runtime = 'nodejs';
 
@@ -10,10 +14,34 @@ const ALLOWED = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', '
 export async function GET() {
   const { error } = await requireStaff();
   if (error) return error;
-  return NextResponse.json({
-    configured: isCloudinaryConfigured(),
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || null,
-  });
+  return NextResponse.json({ configured: true, storage: 'local' });
+}
+
+export async function DELETE(req) {
+  const { error } = await requireStaff();
+  if (error) return error;
+
+  try {
+    const body = await req.json().catch(() => ({}));
+    const urls = [
+      ...(Array.isArray(body.urls) ? body.urls : []),
+      ...(body.url ? [body.url] : []),
+    ].filter(isManagedUploadUrl);
+
+    if (!urls.length) {
+      return NextResponse.json({ error: 'No uploaded image URL provided' }, { status: 400 });
+    }
+
+    const result = await deleteUploadedImages(urls);
+    if (result.errors.length) {
+      return NextResponse.json({ error: result.errors[0], ...result }, { status: 502 });
+    }
+
+    return NextResponse.json({ ok: true, ...result });
+  } catch (err) {
+    console.error('Upload delete error:', err);
+    return NextResponse.json({ error: err.message || 'Delete failed' }, { status: 500 });
+  }
 }
 
 export async function POST(req) {
@@ -21,16 +49,9 @@ export async function POST(req) {
   if (error) return error;
 
   try {
-    if (!isCloudinaryConfigured()) {
-      return NextResponse.json(
-        { error: 'Cloudinary is not configured on the server' },
-        { status: 503 }
-      );
-    }
-
     const form = await req.formData();
     const file = form.get('file');
-    const folder = String(form.get('folder') || 'maple').replace(/[^\w/-]/g, '') || 'maple';
+    const folder = String(form.get('folder') || 'maple');
 
     if (!file || typeof file === 'string') {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -48,41 +69,19 @@ export async function POST(req) {
     }
 
     const bytes = Buffer.from(await file.arrayBuffer());
-    const cloudinary = getCloudinary();
-
-    const uploaded = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          folder,
-          resource_type: 'image',
-          overwrite: false,
-          unique_filename: true,
-          transformation: [
-            { width: 2000, height: 2000, crop: 'limit' },
-            { quality: 'auto:good', fetch_format: 'auto' },
-          ],
-        },
-        (err, result) => {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-      stream.end(bytes);
+    const uploaded = await saveUploadedImage({
+      bytes,
+      mimeType: file.type,
+      folder,
     });
 
     return NextResponse.json({
-      url: uploaded.secure_url,
-      publicId: uploaded.public_id,
-      width: uploaded.width,
-      height: uploaded.height,
-      format: uploaded.format,
+      url: uploaded.url,
+      filename: uploaded.filename,
       bytes: uploaded.bytes,
     });
   } catch (err) {
-    console.error('Cloudinary upload error:', err);
-    return NextResponse.json(
-      { error: err.message || 'Upload failed' },
-      { status: 500 }
-    );
+    console.error('Upload error:', err);
+    return NextResponse.json({ error: err.message || 'Upload failed' }, { status: 500 });
   }
 }

@@ -21,7 +21,7 @@ export default async function AdminProductsPage() {
   return (
     <ProductsManager
       initialProducts={payload}
-      categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+      categories={categories}
     />
   );
 }

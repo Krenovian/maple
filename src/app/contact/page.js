@@ -20,11 +20,10 @@ export default function ContactPage() {
         <div className="dm-wrap">
           <span className="dm-page-kicker">05 — Contact</span>
           <h1>
-            Start a <em>conversation</em>
+            Get in <em>touch</em>
           </h1>
           <p>
-            Project inquiry, materials quote, or a visit to our Maranchery headquarters.
-            Tell us about your site and programme.
+            Send us a message — we&apos;ll get back to you as soon as we can.
           </p>
         </div>
       </header>
@@ -39,11 +38,18 @@ export default function ContactPage() {
             <div>
               <h3>Headquarters</h3>
               <p>
-                Maranchery, Ponnani
+                Maranchery, Malappuram
                 <br />
-                Malappuram, Kerala
+                Kerala, India
+              </p>
+            </div>
+            <div>
+              <h3>Our reach</h3>
+              <p>
+                South India · Qatar
                 <br />
-                India
+                Based in Maranchery, Malappuram, with projects delivered across Kerala,
+                Bengaluru and Qatar.
               </p>
             </div>
             <div>
@@ -90,8 +96,8 @@ export default function ContactPage() {
         <div className="dm-wrap">
           <div className="dm-cta-band reveal-scale">
             <div>
-              <h2>Prefer email first?</h2>
-              <p>Send drawings, site photos or a short brief — we’ll reply within two working days.</p>
+              <h2>Prefer email?</h2>
+              <p>Write to us directly and we&apos;ll reply within two working days.</p>
             </div>
             <a href="mailto:studio@demaple.com" className="btn">studio@demaple.com</a>
           </div>

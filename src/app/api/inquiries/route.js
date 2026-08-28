@@ -12,8 +12,8 @@ export async function POST(req) {
     const finish = data.finish ? String(data.finish) : '';
     const sample = data.sample ? String(data.sample) : '';
 
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: 'Name, email and message are required' }, { status: 400 });
+    if (!name || !phone || !message) {
+      return NextResponse.json({ error: 'Name, phone and message are required' }, { status: 400 });
     }
 
     const product = data.productSlug

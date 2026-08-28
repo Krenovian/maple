@@ -37,7 +37,7 @@ export default function LoginPage() {
       <div className="login-card">
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.75rem' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-            <Image src="/images/logo-leaf.png" alt="MAPLE INFRA & INTERIORS" width={36} height={36} style={{ borderRadius: 6 }} />
+            <Image src="/images/logo-mark.png" alt="MAPLE INFRA & INTERIORS" width={36} height={36} style={{ borderRadius: 6 }} />
             <span style={{ fontFamily: 'var(--display)', fontSize: '1.4rem', color: '#fff' }}>maple</span>
           </Link>
         </div>

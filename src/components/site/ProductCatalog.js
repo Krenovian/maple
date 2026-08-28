@@ -1,28 +1,29 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/components/shop/CartProvider';
 import { useWishlist } from '@/components/shop/WishlistProvider';
 import CartButton from '@/components/shop/CartButton';
 import { Pagination, usePagination } from '@/components/Pagination';
-import { mergeCategoryFilters } from '@/lib/catalog';
+import { productMatchesCategory, rootProductCategories } from '@/lib/categoryTree';
 import { openWhatsApp, prepareWhatsAppTab } from '@/lib/whatsapp';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 const FINISHES = ['Natural', 'Matte', 'Polished', 'Brushed'];
 const SAMPLE_SIZES = ['A4 sample', '300×300 board', 'Site mock-up'];
 
-export default function ProductCatalog({ products, categoryOptions = [] }) {
+export default function ProductCatalog({ products, categories = [] }) {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category') || 'All';
   const { addItem } = useCart();
   const { has, toggle, count: wishCount } = useWishlist();
 
-  const cats = useMemo(() => {
-    const used = products.map((p) => p.category).filter(Boolean);
-    return mergeCategoryFilters(categoryOptions, used);
-  }, [products, categoryOptions]);
+  const rootCategories = useMemo(() => rootProductCategories(categories), [categories]);
+  const cats = useMemo(() => ['All', ...rootCategories.map((category) => category.name)], [rootCategories]);
 
-  const [filter, setFilter] = useState('All');
+  const [filter, setFilter] = useState(initialCategory);
   const [stockOnly, setStockOnly] = useState(false);
   const [savedOnly, setSavedOnly] = useState(false);
   const [query, setQuery] = useState('');
@@ -34,9 +35,13 @@ export default function ProductCatalog({ products, categoryOptions = [] }) {
 
   useBodyScrollLock(!!enquireFor);
 
+  useEffect(() => {
+    if (initialCategory) setFilter(initialCategory);
+  }, [initialCategory]);
+
   const filtered = useMemo(() => {
     return products.filter((p) => {
-      if (filter !== 'All' && p.category !== filter) return false;
+      if (!productMatchesCategory(p.category, filter, categories)) return false;
       if (stockOnly && !p.inStock) return false;
       if (savedOnly && !has(p.id)) return false;
       if (query.trim()) {
@@ -46,7 +51,7 @@ export default function ProductCatalog({ products, categoryOptions = [] }) {
       }
       return true;
     });
-  }, [products, filter, stockOnly, savedOnly, query, has]);
+  }, [products, filter, stockOnly, savedOnly, query, has, categories]);
 
   const { page, setPage, totalPages, totalItems, paged } = usePagination(
     filtered,

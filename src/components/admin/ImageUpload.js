@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { compressImageFile } from '@/lib/compressImage';
+import { deleteRemoteImage, isUploadedImageUrl } from '@/lib/deleteRemoteImage';
 
 export default function ImageUpload({
   value = '',
@@ -11,6 +12,7 @@ export default function ImageUpload({
 }) {
   const inputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [error, setError] = useState('');
   const [progress, setProgress] = useState('');
 
@@ -22,7 +24,7 @@ export default function ImageUpload({
 
     try {
       const compressed = await compressImageFile(file);
-      setProgress('Uploading to Cloudinary…');
+      setProgress('Uploading…');
       const body = new FormData();
       body.append('file', compressed);
       body.append('folder', folder);
@@ -46,6 +48,25 @@ export default function ImageUpload({
     }
   };
 
+  const removeImage = async () => {
+    if (!value) return;
+    setRemoving(true);
+    setError('');
+
+    try {
+      if (isUploadedImageUrl(value)) {
+        setProgress('Removing file…');
+        await deleteRemoteImage(value);
+      }
+      onChange?.('');
+      setProgress('');
+    } catch (err) {
+      setError(err.message || 'Failed to remove image');
+    } finally {
+      setRemoving(false);
+    }
+  };
+
   return (
     <div className="ad-upload">
       <div className="ad-upload-preview">
@@ -61,11 +82,21 @@ export default function ImageUpload({
           <button
             type="button"
             className="btn btn-outline btn-sm"
-            disabled={uploading}
+            disabled={uploading || removing}
             onClick={() => inputRef.current?.click()}
           >
-            {uploading ? 'Uploading…' : 'Upload to Cloudinary'}
+            {uploading ? 'Uploading…' : 'Upload image'}
           </button>
+          {value ? (
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              disabled={uploading || removing}
+              onClick={removeImage}
+            >
+              {removing ? 'Removing…' : 'Remove image'}
+            </button>
+          ) : null}
           <input
             ref={inputRef}
             type="file"
@@ -81,7 +112,7 @@ export default function ImageUpload({
             required
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
-            placeholder="https://res.cloudinary.com/… or /images/…"
+            placeholder="/uploads/… or /images/…"
           />
         </label>
 

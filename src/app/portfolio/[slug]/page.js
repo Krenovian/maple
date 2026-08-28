@@ -117,9 +117,9 @@ export default async function ProjectPage({ params }) {
             <h2 className="reveal-blur">Project brief</h2>
             <p>{project.description}</p>
             <p className="pd-overview-extra">
-              Delivered by MAPLE INFRA &amp; INTERIORS with the same focus on quality,
-              innovation and professionalism that has guided our work for fifteen years —
-              from Maranchery across Kerala, Bengaluru and Qatar.
+              Delivered by MAPLE INFRA &amp; INTERIORS — integrated capability across
+              Architecture + Engineering + Interiors + Contracting + Consultancy. Based in
+              Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.
             </p>
             <div className="pd-actions">
               <Link href="/contact" className="btn">

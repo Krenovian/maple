@@ -55,8 +55,8 @@ export default function Navbar() {
       <div className={`nav-wrapper nav-desktop ${isVisible ? 'nav-visible' : ''}`}>
         <nav className="main-nav" aria-label="Primary">
           <Link href="/" className="nav-logo">
-            <Image src="/images/logo-leaf.png" alt="" width={28} height={28} />
-            <span>maple</span>
+            <Image src="/images/logo-mark.png" alt="" width={28} height={28} />
+            <span>MAPLE</span>
           </Link>
 
           <ul className="nav-links">
@@ -77,10 +77,10 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {/* Mobile dock */}
-      <div className={`nav-mobile ${isVisible ? 'nav-mobile-visible' : ''} ${isMenuOpen ? 'is-open' : ''}`}>
+      {/* Mobile top dock — always visible on small screens */}
+      <div className={`nav-mobile nav-mobile-visible ${isMenuOpen ? 'is-open' : ''}`}>
         <Link href="/" className="nav-mobile-brand" aria-label="Home">
-          <Image src="/images/logo-leaf.png" alt="" width={30} height={30} />
+          <Image src="/images/logo-mark.png" alt="" width={30} height={30} />
         </Link>
 
         <button
@@ -127,7 +127,7 @@ export default function Navbar() {
           <div className="overlay-footer">
             <a href="mailto:studio@demaple.com">studio@demaple.com</a>
             <div className="overlay-socials">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.instagram.com/de_maple_architecture" target="_blank" rel="noopener noreferrer">Instagram</a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
           </div>

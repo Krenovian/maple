@@ -8,11 +8,11 @@ export async function POST(req) {
     const message = await prisma.contactMessage.create({
       data: {
         name: data.name,
-        email: data.email,
-        phone: data.phone,
-        subject: data.subject,
-        message: data.message
-      }
+        email: data.email || '',
+        phone: data.phone || null,
+        subject: data.subject || 'General inquiry',
+        message: data.message,
+      },
     });
 
     return NextResponse.json(message);

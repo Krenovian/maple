@@ -5,19 +5,18 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import HeroMenuButton from '@/components/HeroMenuButton';
 import { onIntroDone } from './intro';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const NAV = [
+  { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/portfolio', label: 'Projects' },
   { href: '/services', label: 'Services' },
-  { href: '/products', label: 'Shop' },
 ];
 
-export default function Hero() {
+export default function Hero({ heroImage = '/images/hero.png', heroImageAlt = 'Residence by MAPLE INFRA & INTERIORS' }) {
   const root = useRef(null);
   const title = useRef(null);
 
@@ -120,8 +119,8 @@ export default function Hero() {
     <section className="dm-hero" ref={root}>
       <div className="dm-hero-media" data-hero-media>
         <Image
-          src="/images/hero.png"
-          alt="Residence by MAPLE INFRA & INTERIORS"
+          src={heroImage}
+          alt={heroImageAlt}
           fill
           priority
           sizes="100vw"
@@ -134,7 +133,7 @@ export default function Hero() {
       <div className="dm-hero-inner dm-wrap">
         <header className="dm-topbar" data-hero-bar>
           <Link href="/" className="dm-topbar-logo" data-cursor="true">
-            <Image src="/images/logo-leaf.png" alt="" width={34} height={34} />
+            <Image src="/images/logo-mark.png" alt="" width={34} height={34} />
             <span>maple</span>
           </Link>
 
@@ -150,7 +149,13 @@ export default function Hero() {
             <Link href="/contact" className="dm-topbar-cta" data-cursor="true">
               <span>Start a project</span>
             </Link>
-            <HeroMenuButton />
+            <Link href="/products" className="dm-topbar-shop" data-cursor="true">
+              <svg className="dm-topbar-shop-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M6 7h12l-1.2 12.5a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 7Z" />
+                <path d="M9 7V5.5A3 3 0 0 1 12 3a3 3 0 0 1 3 2.5V7" />
+              </svg>
+              <span>Shop</span>
+            </Link>
           </div>
         </header>
 
@@ -167,7 +172,7 @@ export default function Hero() {
         <Link href="/products" className="dm-hero-badge dm-badge-left dm-hero-shop" data-cursor="true">
           <span className="dm-hero-shop-kicker">Shop</span>
           <strong className="dm-hero-shop-title">Studio products</strong>
-          <p>Finishes and fittings from live Maple projects — browse, sample, and enquire on WhatsApp.</p>
+          <p>Finishes and fittings from live Maple projects — browse, sample, and enquire.</p>
           <span className="dm-hero-shop-cta">Open shop →</span>
         </Link>
 
@@ -181,7 +186,7 @@ export default function Hero() {
 
           <div className="dm-hero-badge dm-badge-right dm-orizon-card">
             <span>Est. <strong>2011</strong></span>
-            <span>Malappuram <strong>· Kerala</strong></span>
+            <span>South India <strong>· Qatar</strong></span>
             <span>10°44&apos;N 75°58&apos;E</span>
           </div>
         </div>

@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 import FaqList from '@/components/site/FaqList';
+import { getSiteImages } from '@/lib/siteSettings';
 
 export const metadata = { title: 'About | MAPLE INFRA & INTERIORS' };
 
@@ -10,61 +11,84 @@ const VALUES = [
   {
     num: '01',
     title: 'Quality',
-    desc: 'Every drawing, detail and site decision is held to the same standard — practical, durable and finished with care.',
+    desc: (
+      <>
+        Every design, drawing, material and site decision is held to a high standard —{' '}
+        <em>practical, durable and thoughtfully executed</em>.
+      </>
+    ),
   },
   {
     num: '02',
-    title: 'Innovation',
-    desc: 'We keep refining how we design and deliver — from climate-smart planning to efficient contracting on site.',
+    title: 'Integrated Thinking',
+    desc: (
+      <>
+        We bring <em>architecture, engineering, interiors and execution together</em>, creating
+        solutions that work beautifully from concept to completion.
+      </>
+    ),
   },
   {
     num: '03',
     title: 'Professionalism',
-    desc: 'Clear communication, reliable timelines and ethical practice across architecture, engineering and interiors.',
+    desc: (
+      <>
+        Clear communication, responsible planning, reliable timelines and{' '}
+        <em>ethical practice</em> guide every project and every client relationship.
+      </>
+    ),
   },
+];
+
+const FIGURES = [
+  { n: '15', suffix: '+', label: 'Years of experience' },
+  { n: '200', suffix: '+', label: 'Projects completed' },
+  { n: '13', suffix: '', label: 'Professionals' },
+  { n: '5', suffix: '', label: 'Core services' },
 ];
 
 const TIMELINE = [
   {
     year: '2011',
-    title: 'Practice founded',
-    desc: 'DE MAPLE Architects & Engineers opens in Maranchery, Ponnani, serving clients from Malappuram and across Kerala.',
+    title: 'Practice Founded',
+    desc: (
+      <>
+        <em>DE MAPLE Architects &amp; Engineers</em> is established in Maranchery, Ponnani,
+        beginning a journey in architecture and professional design services across Kerala.
+      </>
+    ),
   },
   {
     year: '2016',
-    title: 'Regional expansion',
-    desc: 'Commissions grow across Kerala as the team builds strength in architecture, structure and interiors.',
+    title: 'Growing Capabilities',
+    desc: (
+      <>
+        The practice expands its capabilities across{' '}
+        <em>architecture, engineering, structural design and interiors</em>, strengthening its
+        multidisciplinary approach.
+      </>
+    ),
   },
   {
     year: '2020',
     title: 'Beyond Kerala',
-    desc: 'Work extends to Bengaluru and Qatar while the in-house team of architects, engineers and designers expands.',
+    desc: (
+      <>
+        Our work expands beyond Kerala, with projects extending to{' '}
+        <em>Bengaluru and Qatar</em> as our team and professional capabilities continue to grow.
+      </>
+    ),
   },
   {
     year: '2026',
-    title: 'Rebrand — 15th year',
-    desc: 'Celebrating fifteen years and 200+ projects, we become MAPLE INFRA & INTERIORS with a renewed brand identity.',
-  },
-];
-
-const TEAM = [
-  {
-    name: 'Architecture',
-    role: 'Licensed architects',
-    bio: 'Concept, planning and detailing for residential, commercial and institutional work.',
-    image: '/images/interior.png',
-  },
-  {
-    name: 'Engineering',
-    role: 'Structural & civil',
-    bio: 'Structural engineers and town planners ensuring every design is buildable and compliant.',
-    image: '/images/bedroom.png',
-  },
-  {
-    name: 'Interiors & retail',
-    role: 'Design specialists',
-    bio: 'Interior and retail designers shaping spaces that are refined, functional and ready for use.',
-    image: '/images/pool.png',
+    title: 'A New Chapter',
+    desc: (
+      <>
+        After <em>15 years and 200+ projects</em>, DE MAPLE evolves into{' '}
+        <strong>MAPLE INFRA &amp; INTERIORS</strong>, bringing architecture, engineering,
+        interiors, consultancy and contracting together under a renewed brand identity.
+      </>
+    ),
   },
 ];
 
@@ -75,7 +99,7 @@ const FAQ = [
   },
   {
     q: 'Where are you based?',
-    a: 'Our headquarters is in Maranchery, Ponnani, Malappuram district, Kerala. We deliver projects across Kerala, Bengaluru and Qatar.',
+    a: 'Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar. Our reach is South India · Qatar.',
   },
   {
     q: 'Do you handle contracting as well as design?',
@@ -83,7 +107,9 @@ const FAQ = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const siteImages = await getSiteImages();
+
   return (
     <div className="dm-page">
       <Navbar />
@@ -95,8 +121,16 @@ export default function AboutPage() {
             About <em>Maple</em>
           </h1>
           <p>
-            Fifteen years of architecture, engineering and interiors — now MAPLE INFRA &amp; INTERIORS,
-            still rooted in Maranchery, Ponnani.
+            <em>
+              Fifteen years of architecture, engineering, interiors and execution — now evolving
+              as MAPLE INFRA &amp; INTERIORS.
+            </em>
+          </p>
+          <p>
+            Built on years of experience, our multidisciplinary team brings together design,
+            technical expertise and execution to create{' '}
+            <em>practical, sustainable and thoughtfully crafted spaces</em> across South India
+            and beyond.
           </p>
         </div>
       </header>
@@ -106,27 +140,54 @@ export default function AboutPage() {
           <div className="dm-split-copy reveal-left">
             <h2 className="reveal-blur">Our story</h2>
             <p>
-              For over 15 years, DE MAPLE Architects &amp; Engineers has proudly served clients from
-              our headquarters in Maranchery, Ponnani. Based in Malappuram, our team of 13
-              professionals — licensed architects, engineers, structural engineers, town planners,
-              interior designers and retail designers — has completed more than 200 projects across
-              Kerala, Bengaluru and Qatar.
+              For over <strong>15 years, DE MAPLE Architects &amp; Engineers</strong> has been
+              shaping spaces and serving clients across <strong>South India and beyond</strong>.
+              With a multidisciplinary team of 13 professionals—including licensed architects,
+              engineers, structural engineers, town planners, interior designers, and retail
+              designers—we have successfully delivered{' '}
+              <strong>more than 200 projects across Kerala, Bengaluru, and Qatar</strong>.
             </p>
             <p>
-              As we celebrate our 15th year, we now operate as MAPLE INFRA &amp; INTERIORS with a
-              fresh brand identity. Our management, expertise, service quality and commitment to
-              excellence remain exactly the same — transforming your dreams into reality with
-              practical, sustainable and aesthetically refined spaces.
+              Today, as we celebrate 15 years of experience, we enter a new chapter as{' '}
+              <strong>MAPLE INFRA &amp; INTERIORS</strong>. Our brand identity may be new, but our{' '}
+              <strong>leadership, expertise, commitment to quality, and values remain the same</strong>.
             </p>
-            <div className="dm-tags reveal-stagger">
-              {['Architecture', 'Interiors', 'Contracting', 'Consultancy', 'Engineering'].map((t) => (
-                <span className="dm-tag" key={t}>{t}</span>
-              ))}
-            </div>
+            <p>
+              Building on years of experience in architecture, engineering, interiors, and
+              execution, we continue to create spaces that are{' '}
+              <strong>practical, sustainable, thoughtfully designed, and built to last</strong>.
+            </p>
+            <p>
+              <strong>
+                From an idea to a finished space, we bring expertise, creativity, and execution
+                together.
+              </strong>
+            </p>
+            <p className="ab-capability reveal-up">
+              <span>Integrated capability</span>
+              Architecture + Engineering + Interiors + Contracting + Consultancy
+            </p>
           </div>
           <figure className="dm-figure reveal-clip reveal-right">
-            <Image src="/images/interior.png" alt="Maple project interior" width={900} height={1125} data-parallax="8" />
+            <Image
+              src={siteImages.about_story_image}
+              alt={siteImages.about_story_image_alt}
+              width={900}
+              height={1125}
+              data-parallax="8"
+            />
           </figure>
+        </div>
+      </section>
+
+      <section className="section ab-reach">
+        <div className="dm-wrap ab-reach-inner reveal-up">
+          <span className="dm-page-kicker">Our reach</span>
+          <h2 className="reveal-blur">South India · Qatar</h2>
+          <p>
+            Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru
+            and Qatar.
+          </p>
         </div>
       </section>
 
@@ -140,28 +201,17 @@ export default function AboutPage() {
               <em>measured</em>
             </h2>
             <p>
-              From Maranchery to Bengaluru and Qatar — a compact studio with a long
-              record of built work.
+              Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru
+              and Qatar.
             </p>
           </div>
 
-          <div className="ab-figures-lead reveal-up">
-            <div className="ab-figures-lead-num">
-              <span data-counter="200" data-decimals="0">0</span>
-              <sup>+</sup>
-            </div>
-            <span className="ab-figures-label">Projects completed</span>
-          </div>
-
           <ul className="ab-figures-rail reveal-stagger">
-            {[
-              { n: '15', label: 'Years in practice' },
-              { n: '13', label: 'Professionals' },
-              { n: '3', label: 'Regions served' },
-            ].map((item) => (
+            {FIGURES.map((item) => (
               <li className="ab-figures-rail-item" key={item.label}>
                 <strong>
                   <span data-counter={item.n} data-decimals="0">0</span>
+                  {item.suffix ? <sup>{item.suffix}</sup> : null}
                 </strong>
                 <span className="ab-figures-label">{item.label}</span>
               </li>
@@ -173,7 +223,7 @@ export default function AboutPage() {
       <section className="section dm-band">
         <div className="dm-wrap">
           <div style={{ marginBottom: '2.5rem' }}>
-            <span className="dm-page-kicker reveal-up">Principles</span>
+            <span className="dm-page-kicker reveal-up">Our Principles</span>
             <h2 className="dm-block-title reveal-blur">What guides us</h2>
           </div>
           <div className="dm-value-grid reveal-stagger">
@@ -192,10 +242,12 @@ export default function AboutPage() {
         <div className="dm-wrap dm-about-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 'clamp(2rem,5vw,5rem)' }}>
           <div className="reveal-left">
             <span className="dm-page-kicker">Timeline</span>
-            <h2 className="dm-block-title reveal-blur">A practice built over fifteen years</h2>
-            <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: '36ch' }}>
-              From DE MAPLE Architects &amp; Engineers to MAPLE INFRA &amp; INTERIORS —
-              the same team, expanded capabilities, renewed identity.
+            <h2 className="dm-block-title reveal-blur">A practice built over 15 years</h2>
+            <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: '42ch' }}>
+              <em>
+                From DE MAPLE Architects &amp; Engineers to MAPLE INFRA &amp; INTERIORS — 15 years
+                of experience, an expanded multidisciplinary practice and a renewed identity.
+              </em>
             </p>
           </div>
           <div className="dm-timeline reveal-stagger">
@@ -208,33 +260,6 @@ export default function AboutPage() {
                   <p>{t.desc}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section dm-band">
-        <div className="dm-wrap">
-          <div style={{ marginBottom: '2.5rem' }}>
-            <span className="dm-page-kicker reveal-up">People</span>
-            <h2 className="dm-block-title reveal-blur">A team of 13</h2>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '48ch', marginTop: '0.75rem', lineHeight: 1.7 }}>
-              Licensed architects, engineers, structural engineers, town planners, interior designers
-              and retail designers — working as one practice from Malappuram.
-            </p>
-          </div>
-          <div className="dm-team-grid reveal-stagger">
-            {TEAM.map((m) => (
-              <article className="dm-team-card" key={m.name}>
-                <div className="dm-team-media">
-                  <Image src={m.image} alt={m.name} width={700} height={875} />
-                </div>
-                <div className="dm-team-body">
-                  <h3>{m.name}</h3>
-                  <div className="dm-team-role">{m.role}</div>
-                  <p>{m.bio}</p>
-                </div>
-              </article>
             ))}
           </div>
         </div>

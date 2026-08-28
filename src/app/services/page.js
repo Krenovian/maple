@@ -3,37 +3,50 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import FaqList from '@/components/site/FaqList';
+import { getSiteImages } from '@/lib/siteSettings';
 
-export const metadata = { title: 'Services | MAPLE INFRA & INTERIORS' };
+export const metadata = {
+  title: 'Services | MAPLE INFRA & INTERIORS',
+  description:
+    'Architecture, engineering, interiors, contracting and consultancy — design, technical expertise and execution from concept through handover.',
+};
 
 const services = [
   {
     num: '01',
     title: 'Architectural Design',
-    desc: 'From concept to completion, we design residential and commercial buildings that respond to climate, culture and craftsmanship — tailored to each client’s unique requirements.',
-    features: ['Residential', 'Commercial', 'Institutional', 'Masterplanning'],
-    image: '/images/hero.png',
+    features: 'Residential · Commercial · Institutional · Master Planning',
+    imageKey: 'services_01_architecture_image',
   },
   {
     num: '02',
     title: 'Interior Design',
-    desc: 'Curated interiors for homes, workplaces and retail — practical layouts, refined material palettes and spaces that feel complete from day one.',
-    features: ['Space Planning', 'Material Selection', 'Retail Design', 'Furniture'],
-    image: '/images/interior.png',
+    features: 'Residential Interiors · Commercial Interiors · Retail · Hospitality',
+    imageKey: 'services_02_interiors_image',
   },
   {
     num: '03',
-    title: 'Structural & Interior Contracting',
-    desc: 'In-house contracting that turns drawings into built reality — structural works and interior fit-outs delivered with quality control and on-time execution.',
-    features: ['Structural Works', 'Interior Fit-out', 'Site Management', 'Handover'],
-    image: '/images/bedroom.png',
+    title: 'Structural & Engineering',
+    features: 'Structural Design · Civil Engineering · MEP Coordination · Technical Drawings',
+    imageKey: 'services_03_engineering_image',
   },
   {
     num: '04',
-    title: 'Consultancy',
-    desc: 'Comprehensive consultancy across architecture, structure, interiors and town planning — clear advice for clients who need expert guidance at every stage.',
-    features: ['Design Consultancy', 'Structural Advice', 'Town Planning', 'Project Support'],
-    image: '/images/pool.png',
+    title: 'Project Consultancy',
+    features: 'Planning · Estimation · Approvals · Tendering · Technical Coordination',
+    imageKey: 'services_04_consultancy_image',
+  },
+  {
+    num: '05',
+    title: 'Civil & Structural Contracting',
+    features: 'Construction · RCC · Masonry · Finishes · External Works',
+    imageKey: 'services_05_contracting_image',
+  },
+  {
+    num: '06',
+    title: 'Interior Contracting & Fit-Out',
+    features: 'Interior Execution · Joinery · Ceiling · Flooring · Furniture · Services Coordination',
+    imageKey: 'services_06_interior_contracting_image',
   },
 ];
 
@@ -46,20 +59,34 @@ const STEPS = [
 
 const FAQ = [
   {
-    q: 'Do you offer end-to-end delivery?',
-    a: 'Yes. Architectural design, interiors, structural and interior contracting, and consultancy can be commissioned together or as individual scopes.',
+    q: 'Do you offer end-to-end project delivery?',
+    a: 'Yes. Architecture, engineering, interiors, consultancy and contracting can be commissioned together or individually, depending on the project’s requirements.',
   },
   {
-    q: 'Where do you take projects?',
-    a: 'We are based in Maranchery, Ponnani (Malappuram) and have delivered work across Kerala, Bengaluru and Qatar.',
+    q: 'Where do you undertake projects?',
+    a: 'We undertake projects across South India, with experience in Kerala, Bengaluru and Qatar.',
   },
   {
-    q: 'Can you work with an existing contractor?',
-    a: 'We can. We also offer our own structural and interior contracting when clients prefer a single accountable team.',
+    q: 'Can I appoint MII only for design or consultancy?',
+    a: 'Yes. Our services can be engaged individually or combined as an integrated project solution.',
+  },
+  {
+    q: 'Can you work with my existing contractor?',
+    a: 'Yes. We can provide design, engineering, consultancy and coordination while working alongside your appointed contractor.',
+  },
+  {
+    q: 'Do you handle approvals and technical documentation?',
+    a: 'Yes. Depending on the scope, our team can assist with planning, documentation, estimation, technical coordination and statutory requirements.',
+  },
+  {
+    q: 'Can you handle both architecture and interiors?',
+    a: 'Yes. Our integrated approach allows architectural and interior design to be developed together for better functional, technical and aesthetic coordination.',
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const siteImages = await getSiteImages();
+
   return (
     <div className="dm-page">
       <Navbar />
@@ -68,11 +95,14 @@ export default function ServicesPage() {
         <div className="dm-wrap">
           <span className="dm-page-kicker">04 — Capabilities</span>
           <h1>
-            Our <em>services</em>
+            Our <em>Services</em>
           </h1>
           <p>
-            Architectural design, interior design, structural and interior contracting,
-            and comprehensive consultancy — from first sketch through handover.
+            <em>
+              Architecture, engineering, interiors, contracting and consultancy — bringing design,
+              technical expertise and execution together from the first concept through to final
+              handover.
+            </em>
           </p>
         </div>
       </header>
@@ -88,15 +118,15 @@ export default function ServicesPage() {
               <span className="dm-service-num">{s.num}</span>
               <div className={i % 2 === 0 ? 'reveal-left' : 'reveal-right'}>
                 <h2 className="reveal-blur">{s.title}</h2>
-                <p>{s.desc}</p>
-                <div className="dm-tags">
-                  {s.features.map((f) => (
-                    <span className="dm-tag" key={f}>{f}</span>
-                  ))}
-                </div>
+                <p className="dm-service-features">{s.features}</p>
               </div>
               <div className="dm-figure reveal-clip" style={{ aspectRatio: '4 / 3', minHeight: 180 }}>
-                <Image src={s.image} alt={s.title} width={800} height={600} />
+                <Image
+                  src={siteImages[s.imageKey]}
+                  alt={siteImages[`${s.imageKey}_alt`]}
+                  width={800}
+                  height={600}
+                />
               </div>
             </article>
           ))}
@@ -124,10 +154,14 @@ export default function ServicesPage() {
       <section className="section">
         <div className="dm-wrap" style={{ maxWidth: 900 }}>
           <span className="dm-page-kicker reveal-up">FAQ</span>
-          <h2 className="dm-block-title reveal-blur" style={{ marginBottom: '2rem' }}>Engagement questions</h2>
+          <h2 className="dm-block-title reveal-blur" style={{ marginBottom: '2rem' }}>
+            Engagement questions
+          </h2>
           <FaqList items={FAQ} />
           <div style={{ marginTop: '3rem' }}>
-            <Link href="/contact" className="btn">Discuss a Project ↗</Link>
+            <Link href="/contact" className="btn">
+              Discuss a Project ↗
+            </Link>
           </div>
         </div>
       </section>

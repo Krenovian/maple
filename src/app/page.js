@@ -14,24 +14,48 @@ import Services from '@/components/home/Services';
 import ProcessBand from '@/components/home/ProcessBand';
 import IndexList from '@/components/home/IndexList';
 import Closing from '@/components/home/Closing';
+import DecorClub from '@/components/home/DecorClub';
+import { getSiteImages } from '@/lib/siteSettings';
+import { getHomepageContent } from '@/lib/siteContent';
+import { HOMEPAGE_SHOP } from '@/lib/homepageShop';
 
 export default async function HomePage() {
-  const projects = await prisma.project.findMany({
-    where: { featured: true },
-    take: 6,
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      category: true,
-      location: true,
-      area: true,
-      year: true,
-      image: true,
-      slug: true,
-    },
-  });
+  const [projects, siteImages, homepageContent, featuredProducts] = await Promise.all([
+    prisma.project.findMany({
+      where: { featured: true },
+      take: 6,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        category: true,
+        location: true,
+        area: true,
+        year: true,
+        image: true,
+        slug: true,
+      },
+    }),
+    getSiteImages(),
+    getHomepageContent(),
+    prisma.product.findMany({
+      where: { featured: true },
+      take: 8,
+      orderBy: { updatedAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        category: true,
+        price: true,
+        image: true,
+        imageAlt: true,
+      },
+    }),
+  ]);
+
+  const homepageProducts = featuredProducts.slice(0, HOMEPAGE_SHOP.featuredLimit);
 
   return (
     <div className="dm-home">
@@ -40,14 +64,23 @@ export default async function HomePage() {
       <Navbar />
 
       <main>
-        <Hero />
+        <Hero heroImage={siteImages.hero_image} heroImageAlt={siteImages.hero_image_alt} />
         <Marquee />
-        <Manifesto />
+        <Manifesto
+          content={homepageContent.manifesto}
+          image={siteImages.manifesto_image}
+          imageAlt={siteImages.manifesto_image_alt}
+        />
         <Works projects={projects} />
-        <Services />
+        <Services siteImages={siteImages} />
         <ProcessBand />
         <IndexList />
-        <Closing />
+        <DecorClub shop={HOMEPAGE_SHOP} products={homepageProducts} />
+        <Closing
+          quoteImage={siteImages.closing_quote_image}
+          quoteImageAlt={siteImages.closing_quote_image_alt}
+          testimonial={homepageContent.testimonial}
+        />
       </main>
 
       <Footer />

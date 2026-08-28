@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireStaff, slugify } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
+import {
+  collectEntityImageUrls,
+  collectRemovedUploadUrls,
+  deleteUploadUrls,
+} from '@/lib/uploadAssets';
+import { parseJsonArray } from '@/lib/catalog';
+
+function projectImageUrlsFromBody(body) {
+  const gallery = Array.isArray(body.gallery)
+    ? body.gallery.filter(Boolean)
+    : parseJsonArray(body.images);
+  return [body.image, ...gallery].filter(Boolean);
+}
 
 export async function GET() {
   const { error } = await requireStaff();
@@ -70,6 +83,11 @@ export async function PUT(req) {
     const body = await req.json();
     if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
+    const existing = await prisma.project.findUnique({ where: { id: body.id } });
+    const beforeUrls = collectEntityImageUrls(existing);
+    const afterUrls = projectImageUrlsFromBody(body);
+    const removedUrls = collectRemovedUploadUrls(beforeUrls, afterUrls);
+
     const project = await prisma.project.update({
       where: { id: body.id },
       data: {
@@ -90,6 +108,10 @@ export async function PUT(req) {
         metaDescription: body.metaDescription?.trim() || null,
       },
     });
+
+    if (removedUrls.length) {
+      await deleteUploadUrls(removedUrls);
+    }
 
     await logActivity({
       session,
@@ -116,6 +138,10 @@ export async function DELETE(req) {
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
     const existing = await prisma.project.findUnique({ where: { id } });
     await prisma.project.delete({ where: { id } });
+
+    if (existing) {
+      await deleteUploadUrls(collectEntityImageUrls(existing));
+    }
 
     await logActivity({
       session,

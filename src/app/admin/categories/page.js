@@ -5,7 +5,7 @@ export const metadata = { title: 'Categories | Admin Workspace' };
 
 export default async function AdminCategoriesPage() {
   const categories = await prisma.category.findMany({
-    orderBy: [{ type: 'asc' }, { name: 'asc' }],
+    orderBy: [{ type: 'asc' }, { sortOrder: 'asc' }, { name: 'asc' }],
   });
 
   const payload = categories.map((c) => ({

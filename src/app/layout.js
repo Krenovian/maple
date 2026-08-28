@@ -12,25 +12,25 @@ const base = siteUrl();
 export const metadata = {
   metadataBase: new URL(base),
   title: {
-    default: 'MAPLE INFRA & INTERIORS | Architecture · Engineering · Interiors',
+    default: 'MAPLE INFRA & INTERIORS | Architecture · Engineering · Interiors · Contracting · Consultancy',
     template: '%s | MAPLE INFRA & INTERIORS',
   },
   description:
-    'Formerly DE MAPLE Architects & Engineers. Based in Maranchery, Ponnani (Malappuram), delivering architecture, interiors, contracting and consultancy across Kerala, Bengaluru and Qatar — 200+ projects over 15 years.',
+    'Formerly DE MAPLE Architects & Engineers. Integrated capability: Architecture + Engineering + Interiors + Contracting + Consultancy. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar — 200+ projects over 15 years.',
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     siteName: 'MAPLE INFRA & INTERIORS',
     title: 'MAPLE INFRA & INTERIORS',
     description:
-      'Architecture, interiors, contracting and consultancy from Malappuram — 200+ projects across Kerala, Bengaluru and Qatar.',
+      'Integrated capability across Architecture + Engineering + Interiors + Contracting + Consultancy. Based in Maranchery, Malappuram — South India · Qatar.',
     images: [{ url: '/images/hero.png', width: 1200, height: 630, alt: 'MAPLE INFRA & INTERIORS' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MAPLE INFRA & INTERIORS',
     description:
-      'Architecture, interiors, contracting and consultancy from Malappuram.',
+      'Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.',
     images: ['/images/hero.png'],
   },
 };

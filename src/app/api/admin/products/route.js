@@ -3,6 +3,18 @@ import prisma from '@/lib/prisma';
 import { requireStaff, slugify } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
 import { parseJsonArray, parseSpecs } from '@/lib/catalog';
+import {
+  collectEntityImageUrls,
+  collectRemovedUploadUrls,
+  deleteUploadUrls,
+} from '@/lib/uploadAssets';
+
+function productImageUrlsFromBody(body) {
+  const gallery = Array.isArray(body.gallery)
+    ? body.gallery.filter(Boolean)
+    : parseJsonArray(body.images);
+  return [body.image, ...gallery].filter(Boolean);
+}
 
 function productPayload(body) {
   const gallery = Array.isArray(body.gallery)
@@ -20,6 +32,7 @@ function productPayload(body) {
     images: gallery.length ? JSON.stringify(gallery) : null,
     specs: specs.length ? JSON.stringify(specs) : null,
     leadTime: body.leadTime?.trim() || null,
+    featured: Boolean(body.featured),
     metaTitle: body.metaTitle?.trim() || null,
     metaDescription: body.metaDescription?.trim() || null,
   };
@@ -48,9 +61,9 @@ export async function POST(req) {
     const exists = await prisma.product.findUnique({ where: { slug } });
     if (exists) slug = `${slug}-${Date.now().toString(36)}`;
 
-    const data = productPayload({ ...body, name, inStock: body.inStock !== false });
+    const data = productPayload({ ...body, name, inStock: body.inStock !== false, featured: Boolean(body.featured) });
     const product = await prisma.product.create({
-      data: { ...data, slug, inStock: body.inStock !== false },
+      data: { ...data, slug, inStock: body.inStock !== false, featured: Boolean(body.featured) },
     });
 
     await logActivity({
@@ -76,11 +89,20 @@ export async function PUT(req) {
     const body = await req.json();
     if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
-    const data = productPayload({ ...body, inStock: Boolean(body.inStock) });
+    const existing = await prisma.product.findUnique({ where: { id: body.id } });
+    const beforeUrls = collectEntityImageUrls(existing);
+    const afterUrls = productImageUrlsFromBody(body);
+    const removedUrls = collectRemovedUploadUrls(beforeUrls, afterUrls);
+
+    const data = productPayload({ ...body, inStock: Boolean(body.inStock), featured: Boolean(body.featured) });
     const product = await prisma.product.update({
       where: { id: body.id },
-      data: { ...data, inStock: Boolean(body.inStock) },
+      data: { ...data, inStock: Boolean(body.inStock), featured: Boolean(body.featured) },
     });
+
+    if (removedUrls.length) {
+      await deleteUploadUrls(removedUrls);
+    }
 
     await logActivity({
       session,
@@ -107,6 +129,10 @@ export async function DELETE(req) {
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
     const existing = await prisma.product.findUnique({ where: { id } });
     await prisma.product.delete({ where: { id } });
+
+    if (existing) {
+      await deleteUploadUrls(collectEntityImageUrls(existing));
+    }
 
     await logActivity({
       session,

@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WORDS = ['Architecture', 'Interiors', 'Contracting', 'Consultancy', 'Engineering'];
+const WORDS = ['Architecture', 'Engineering', 'Interiors', 'Contracting', 'Consultancy'];
 
 function Group({ ariaHidden }) {
   return (

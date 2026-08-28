@@ -7,6 +7,8 @@ import ImageUpload from './ImageUpload';
 import GalleryUpload from './GalleryUpload';
 import { parseJsonArray, parseSpecs } from '@/lib/catalog';
 
+import { flattenCategoryOptions } from '@/lib/categoryTree';
+
 const EMPTY = {
   name: '',
   description: '',
@@ -18,6 +20,7 @@ const EMPTY = {
   specsText: '',
   leadTime: '',
   inStock: true,
+  featured: false,
   metaTitle: '',
   metaDescription: '',
 };
@@ -48,8 +51,8 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
   const [form, setForm] = useState(EMPTY);
   const [query, setQuery] = useState('');
 
-  const categoryNames = useMemo(
-    () => categories.map((c) => (typeof c === 'string' ? c : c.name)).filter(Boolean),
+  const categoryOptions = useMemo(
+    () => flattenCategoryOptions(categories, 'PRODUCT'),
     [categories]
   );
 
@@ -68,7 +71,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ ...EMPTY, category: categoryNames[0] || '' });
+    setForm({ ...EMPTY, category: categoryOptions[0]?.value || '' });
     setError('');
     setOpen(true);
   };
@@ -86,6 +89,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
       specsText: specsToText(p.specs),
       leadTime: p.leadTime || '',
       inStock: p.inStock,
+      featured: Boolean(p.featured),
       metaTitle: p.metaTitle || '',
       metaDescription: p.metaDescription || '',
     });
@@ -104,6 +108,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
     specs: textToSpecs(form.specsText),
     leadTime: form.leadTime,
     inStock: form.inStock,
+    featured: form.featured,
     metaTitle: form.metaTitle,
     metaDescription: form.metaDescription,
   });
@@ -177,6 +182,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
                 <th>Category</th>
                 <th>Price</th>
                 <th>Lead time</th>
+                <th>Featured</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -194,6 +200,11 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
                   <td>{p.price || '—'}</td>
                   <td>{p.leadTime || '—'}</td>
                   <td>
+                    <span className={`ad-badge ${p.featured ? 'in-stock' : ''}`}>
+                      {p.featured ? 'Featured' : '—'}
+                    </span>
+                  </td>
+                  <td>
                     <span className={`ad-badge ${p.inStock ? 'in-stock' : 'out-of-stock'}`}>
                       {p.inStock ? 'In Stock' : 'Lead time'}
                     </span>
@@ -207,7 +218,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
                 </tr>
               ))}
               {totalItems === 0 && (
-                <tr><td colSpan={7} className="ad-empty">No products found.</td></tr>
+                <tr><td colSpan={8} className="ad-empty">No products found.</td></tr>
               )}
             </tbody>
           </table>
@@ -234,10 +245,12 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
               <Field label="Category">
                 <select required value={form.category} onChange={set('category')}>
                   <option value="" disabled>Select category…</option>
-                  {categoryNames.map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  {categoryOptions.map((option) => (
+                    <option key={option.id} value={option.value}>
+                      {`${'  '.repeat(option.depth)}${option.label}`}
+                    </option>
                   ))}
-                  {form.category && !categoryNames.includes(form.category) && (
+                  {form.category && !categoryOptions.some((option) => option.value === form.category) && (
                     <option value={form.category}>{form.category} (legacy)</option>
                   )}
                 </select>
@@ -286,6 +299,10 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
             <label className="ad-check">
               <input type="checkbox" checked={form.inStock} onChange={set('inStock')} />
               Currently in stock
+            </label>
+            <label className="ad-check">
+              <input type="checkbox" checked={form.featured} onChange={set('featured')} />
+              Feature on homepage shop section
             </label>
             {error && <p className="dm-form-status err">{error}</p>}
             <div className="ad-modal-actions">

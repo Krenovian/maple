@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { compressImageFile } from '@/lib/compressImage';
+import { deleteRemoteImage, isUploadedImageUrl } from '@/lib/deleteRemoteImage';
 
 export default function GalleryUpload({
   values = [],
@@ -60,8 +61,23 @@ export default function GalleryUpload({
     }
   };
 
-  const removeAt = (index) => {
-    setList(list.filter((_, i) => i !== index));
+  const removeAt = async (index) => {
+    const url = list[index];
+    if (!url) return;
+
+    setError('');
+    if (isUploadedImageUrl(url)) setProgress('Removing file…');
+
+    try {
+      if (isUploadedImageUrl(url)) {
+        await deleteRemoteImage(url);
+      }
+      setList(list.filter((_, i) => i !== index));
+      setProgress('');
+    } catch (err) {
+      setError(err.message || 'Failed to remove image');
+      setProgress('');
+    }
   };
 
   const move = (index, dir) => {

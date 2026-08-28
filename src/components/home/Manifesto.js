@@ -7,15 +7,31 @@ import { SplitText } from 'gsap/SplitText';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const STATS = [
-  { value: 200, suffix: '+', label: 'Projects completed' },
-  { value: 15, suffix: '', label: 'Years in practice' },
-  { value: 13, suffix: '', label: 'Professionals' },
-  { value: 3, suffix: '', label: 'Regions served' },
-];
+const DEFAULT_MANIFESTO = {
+  eyebrow: 'The Practice',
+  index: '01 — Ethos',
+  statement:
+    'We deliver <em>practical</em>, sustainable and aesthetically refined spaces — tailored to every client.',
+  copy1:
+    'MAPLE INFRA & INTERIORS — formerly DE MAPLE Architects & Engineers — with a team of 13 professionals. Integrated capability: Architecture + Engineering + Interiors + Contracting + Consultancy. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.',
+  copy2:
+    'Quality, innovation and professionalism guide every project — from architectural design and interiors to structural contracting and consultancy. Same trusted team, renewed identity.',
+  signature: '— MAPLE INFRA & INTERIORS',
+  stats: [
+    { value: 200, suffix: '+', label: 'Projects completed' },
+    { value: 15, suffix: '', label: 'Years in practice' },
+    { value: 13, suffix: '', label: 'Professionals' },
+    { value: 3, suffix: '', label: 'Regions served' },
+  ],
+};
 
-export default function Manifesto() {
+export default function Manifesto({
+  content = DEFAULT_MANIFESTO,
+  image = '/images/interior.png',
+  imageAlt = 'Warm oak and travertine interior detail',
+}) {
   const root = useRef(null);
+  const copy = { ...DEFAULT_MANIFESTO, ...content, stats: content.stats?.length ? content.stats : DEFAULT_MANIFESTO.stats };
 
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
@@ -41,7 +57,6 @@ export default function Manifesto() {
       if (document.fonts?.status === 'loaded') build();
       else document.fonts.ready.then(build);
 
-      // Figure parallax
       gsap.fromTo(
         q('[data-parallax]'),
         { yPercent: -6 },
@@ -52,7 +67,6 @@ export default function Manifesto() {
         }
       );
 
-      // Bento cards fade in
       q('.dm-bento-card').forEach((el, index) => {
         gsap.from(el, {
           y: 40,
@@ -64,7 +78,6 @@ export default function Manifesto() {
         });
       });
 
-      // Counters
       q('[data-counter]').forEach((el) => {
         const target = parseFloat(el.dataset.counter);
         const decimals = parseInt(el.dataset.decimals || '0', 10);
@@ -84,79 +97,62 @@ export default function Manifesto() {
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [copy.statement]);
 
   return (
     <section className="dm-manifesto" ref={root} id="studio">
       <div className="dm-wrap">
         <div className="dm-manifesto-head" style={{ borderBottom: 'none', marginBottom: '2rem', paddingBottom: 0 }}>
-          <span className="dm-eyebrow">The Practice</span>
-          <span className="dm-manifesto-index">01 — Ethos</span>
+          <span className="dm-eyebrow">{copy.eyebrow}</span>
+          <span className="dm-manifesto-index">{copy.index}</span>
         </div>
-        
-        {/* GenZ Bento Grid */}
+
         <div className="dm-bento-grid">
-          
-          {/* Main Statement Card */}
           <div className="dm-bento-card dm-bento-large">
-            <h2 className="dm-statement" data-statement>
-              We deliver <em>practical</em>, sustainable and aesthetically refined spaces —
-              tailored to every client.
-            </h2>
+            <h2
+              className="dm-statement"
+              data-statement
+              dangerouslySetInnerHTML={{ __html: copy.statement }}
+            />
           </div>
 
-          {/* Copy Card 1 */}
           <div className="dm-bento-card dm-bento-glass">
-            <p className="dm-bento-text">
-              MAPLE INFRA &amp; INTERIORS — formerly DE MAPLE Architects &amp; Engineers —
-              works from Maranchery, Ponnani with a team of 13 architects, engineers, town
-              planners and designers. Over 15 years we have completed 200+ projects across
-              Kerala, Bengaluru and Qatar.
-            </p>
+            <p className="dm-bento-text">{copy.copy1}</p>
           </div>
 
-          {/* Image Card */}
           <figure className="dm-bento-card dm-bento-image" data-figure>
             <Image
-              src="/images/interior.png"
-              alt="Warm oak and travertine interior detail"
+              src={image}
+              alt={imageAlt}
               fill
               data-parallax
               style={{ objectFit: 'cover' }}
               sizes="(max-width: 900px) 100vw, 45vw"
             />
-            <figcaption className="dm-figure-caption">Interior project — Bengaluru</figcaption>
           </figure>
 
-          {/* Stats Grouped Card */}
           <div className="dm-bento-card dm-bento-stats-container">
             <div className="dm-stats-grid">
-              {STATS.map((s) => (
-                <div className="dm-stat-box" key={s.label}>
+              {copy.stats.map((stat) => (
+                <div className="dm-stat-box" key={stat.label}>
                   <div className="dm-stat-num">
-                    <span data-counter={s.value} data-decimals={s.decimals || 0}>
+                    <span data-counter={stat.value} data-decimals={stat.decimals || 0}>
                       0
                     </span>
-                    {s.suffix && <sup>{s.suffix}</sup>}
+                    {stat.suffix ? <sup>{stat.suffix}</sup> : null}
                   </div>
-                  <div className="dm-stat-label">{s.label}</div>
+                  <div className="dm-stat-label">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Copy Card 2 */}
           <div className="dm-bento-card dm-bento-glass">
-            <p className="dm-bento-text">
-              Quality, innovation and professionalism guide every project — from architectural
-              design and interiors to structural contracting and consultancy. Same trusted team,
-              renewed identity.
-            </p>
+            <p className="dm-bento-text">{copy.copy2}</p>
             <p className="dm-signature" style={{ marginTop: 'auto' }}>
-              — MAPLE INFRA &amp; INTERIORS
+              {copy.signature}
             </p>
           </div>
-
         </div>
       </div>
     </section>

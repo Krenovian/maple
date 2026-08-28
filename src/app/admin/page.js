@@ -80,6 +80,18 @@ export default async function AdminDashboardPage() {
           <strong>Order Leads</strong>
           <span>Cart checkouts and WhatsApp enquiries.</span>
         </Link>
+        <Link href="/admin/homepage">
+          <strong>Homepage copy</strong>
+          <span>Ethos section and testimonial quote text.</span>
+        </Link>
+        <Link href="/admin/shop">
+          <strong>Shop promos</strong>
+          <span>Promo strip and offer banner on the shop page.</span>
+        </Link>
+        <Link href="/admin/site">
+          <strong>Site images</strong>
+          <span>Homepage, About, and Services section images.</span>
+        </Link>
         <Link href="/admin/employees">
           <strong>Team Access</strong>
           <span>Invite employees to the workspace.</span>

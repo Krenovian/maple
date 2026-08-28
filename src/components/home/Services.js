@@ -16,29 +16,52 @@ const SERVICES = [
   },
   {
     num: '02',
+    title: 'Engineering',
+    image: '/images/bedroom.png',
+    desc: 'Structural and civil engineering with town planning input — buildable, compliant solutions from early design through site.',
+    tags: ['Structure', 'Civil', 'Planning'],
+  },
+  {
+    num: '03',
     title: 'Interiors',
     image: '/images/interior.png',
     desc: 'Interior and retail design with practical layouts, refined finishes and spaces ready for everyday use.',
     tags: ['Interiors', 'Retail', 'Fit-out'],
   },
   {
-    num: '03',
+    num: '04',
     title: 'Contracting',
-    image: '/images/bedroom.png',
+    image: '/images/pool.png',
     desc: 'Structural and interior contracting delivered in-house — quality control, clear timelines and accountable site execution.',
     tags: ['Structure', 'Interiors', 'Site'],
   },
   {
-    num: '04',
+    num: '05',
     title: 'Consultancy',
-    image: '/images/pool.png',
+    image: '/images/hero.png',
     desc: 'Comprehensive consultancy across design, structure and town planning for clients who need expert guidance at every stage.',
     tags: ['Advice', 'Structure', 'Planning'],
   },
 ];
 
-export default function Services() {
+const CAPABILITY_IMAGE_KEYS = [
+  'capability_architecture_image',
+  'capability_engineering_image',
+  'capability_interiors_image',
+  'capability_contracting_image',
+  'capability_consultancy_image',
+];
+
+export default function Services({ siteImages = {} }) {
   const root = useRef(null);
+  const items = SERVICES.map((service, index) => {
+    const imageKey = CAPABILITY_IMAGE_KEYS[index];
+    return {
+      ...service,
+      image: siteImages[imageKey] || service.image,
+      alt: siteImages[`${imageKey}_alt`] || service.title,
+    };
+  });
 
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
@@ -95,9 +118,9 @@ export default function Services() {
       <div className="dm-wrap">
         <div className="dm-services-head" data-services-head>
           <h2 data-services-fade>
-            What we
+            Integrated
             <br />
-            <em>do</em>
+            <em>capability</em>
           </h2>
           <span className="dm-eyebrow" data-services-fade>
             02 — Capabilities
@@ -105,7 +128,7 @@ export default function Services() {
         </div>
 
         <div className="dm-stack">
-          {SERVICES.map((s) => (
+          {items.map((s) => (
             <article className="dm-stack-card" data-card key={s.num}>
               <div className="dm-stack-text">
                 <span className="dm-stack-num">{s.num}</span>
@@ -120,7 +143,7 @@ export default function Services() {
               <div className="dm-stack-media">
                 <Image
                   src={s.image}
-                  alt={s.title}
+                  alt={s.alt}
                   width={900}
                   height={700}
                   sizes="(max-width: 900px) 100vw, 40vw"

@@ -8,7 +8,7 @@ export default async function EmployeeProductsPage() {
     prisma.product.findMany({ orderBy: { createdAt: 'desc' } }),
     prisma.category.findMany({
       where: { type: 'PRODUCT' },
-      orderBy: { name: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     }),
   ]);
 
@@ -21,7 +21,7 @@ export default async function EmployeeProductsPage() {
   return (
     <ProductsManager
       initialProducts={payload}
-      categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+      categories={categories}
     />
   );
 }

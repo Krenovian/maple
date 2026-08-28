@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 export const metadata = {
   title: 'Portfolio | MAPLE INFRA & INTERIORS',
   description:
-    'Selected architecture and interior projects across Kerala, Bengaluru and Qatar by MAPLE INFRA & INTERIORS.',
+    'Selected projects across South India · Qatar by MAPLE INFRA & INTERIORS. Based in Maranchery, Malappuram, with work delivered across Kerala, Bengaluru and Qatar.',
 };
 
 export default async function PortfolioPage() {
@@ -30,8 +30,9 @@ export default async function PortfolioPage() {
             Project <em>portfolio</em>
           </h1>
           <p>
-            Selected work across Kerala, Bengaluru and Qatar — switch between stage
-            and cards, filter by typology, location or year.
+            Selected work across South India · Qatar — based in Maranchery, Malappuram, with
+            projects delivered across Kerala, Bengaluru and Qatar. Switch between stage and
+            cards, filter by typology, location or year.
           </p>
         </div>
       </header>

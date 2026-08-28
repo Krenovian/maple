@@ -9,9 +9,17 @@ import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const MARKS = ['Kerala', 'Bengaluru', 'Qatar', 'Malappuram', 'Ponnani'];
+const MARKS = ['South India', 'Qatar'];
 
-export default function Closing() {
+export default function Closing({
+  quoteImage = '/images/bedroom.png',
+  quoteImageAlt = 'Completed residence interior',
+  testimonial = {
+    quote:
+      'They did not build us a house. They built a way of living with the light, the rain and the trees that were already here.',
+    attribution: 'Private residence · Malappuram, Kerala',
+  },
+}) {
   const root = useRef(null);
 
   useLayoutEffect(() => {
@@ -81,7 +89,7 @@ export default function Closing() {
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [testimonial.quote]);
 
   return (
     <div ref={root}>
@@ -90,15 +98,14 @@ export default function Closing() {
         <div className="dm-wrap dm-quote-inner">
           <div>
             <blockquote className="dm-quote-text" data-quote>
-              They did not build us a house. They built a way of living with the light, the rain
-              and the trees that were already here.
+              {testimonial.quote}
             </blockquote>
-            <div className="dm-quote-by">Private residence · Malappuram, Kerala</div>
+            <div className="dm-quote-by">{testimonial.attribution}</div>
           </div>
           <figure className="dm-quote-figure" data-quote-figure>
             <Image
-              src="/images/bedroom.png"
-              alt="Completed residence interior"
+              src={quoteImage}
+              alt={quoteImageAlt}
               width={900}
               height={1200}
               data-quote-img
@@ -120,8 +127,9 @@ export default function Closing() {
               Build your<br /><em>vision</em>
             </h2>
             <p className="dm-cta-sub" data-cta-fade>
-              From our headquarters in Maranchery, Ponnani we take on architecture, interiors,
-              contracting and consultancy. Tell us about your project.
+               Architecture + Engineering + Interiors + Contracting +
+              Consultancy. Based in Maranchery, Malappuram, with projects delivered across
+              Kerala, Bengaluru and Qatar.
             </p>
             <MagneticButton href="/contact" className="dm-magnetic" data-cta-fade>
               Start a project
@@ -130,7 +138,7 @@ export default function Closing() {
 
           {/* Right: location tags stacked */}
           <div className="dm-cta-right" data-cta-fade>
-            <p className="dm-cta-right-label">We work across</p>
+            <p className="dm-cta-right-label">Our reach</p>
             <ul className="dm-cta-cities">
               {MARKS.map((m) => (
                 <li key={m}>{m}</li>

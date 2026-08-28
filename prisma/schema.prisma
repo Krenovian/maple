@@ -53,6 +53,7 @@ model Product {
   specs           String?  // JSON [{label,value}]
   leadTime        String?  // e.g. "2–3 weeks"
   inStock         Boolean  @default(true)
+  featured        Boolean  @default(false)
   metaTitle       String?
   metaDescription String?
   createdAt       DateTime @default(now())
@@ -132,4 +133,10 @@ model Category {
   updatedAt DateTime @updatedAt
 
   @@unique([type, name])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
 }
