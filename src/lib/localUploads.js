@@ -13,6 +13,12 @@ const MIME_EXT = {
   'image/avif': '.avif',
 };
 
+export function getUploadRoot() {
+  const configured = process.env.UPLOAD_ROOT?.trim();
+  if (configured) return path.resolve(configured);
+  return path.join(process.cwd(), 'public', 'uploads');
+}
+
 export function sanitizeUploadFolder(folder = 'maple') {
   return String(folder || 'maple')
     .replace(/[^\w/-]/g, '')
@@ -24,10 +30,12 @@ export function getUploadAbsolutePath(url) {
   if (!isManagedUploadUrl(url)) return null;
 
   const relative = url.slice(UPLOAD_URL_PREFIX.length).replace(/^\/+/, '');
-  const absolute = path.join(process.cwd(), 'public', 'uploads', relative);
-  const uploadsRoot = path.join(process.cwd(), 'public', 'uploads');
+  const uploadsRoot = path.resolve(getUploadRoot());
+  const absolute = path.resolve(uploadsRoot, relative);
 
-  if (!absolute.startsWith(uploadsRoot)) return null;
+  if (absolute !== uploadsRoot && !absolute.startsWith(`${uploadsRoot}${path.sep}`)) {
+    return null;
+  }
   return absolute;
 }
 
@@ -38,7 +46,7 @@ export async function saveUploadedImage({ bytes, mimeType, folder = 'maple' }) {
   }
 
   const safeFolder = sanitizeUploadFolder(folder);
-  const dir = path.join(process.cwd(), 'public', 'uploads', safeFolder);
+  const dir = path.join(getUploadRoot(), safeFolder);
   await mkdir(dir, { recursive: true });
 
   const filename = `${Date.now()}-${randomBytes(8).toString('hex')}${ext}`;

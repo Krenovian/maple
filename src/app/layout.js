@@ -12,6 +12,10 @@ const base = siteUrl();
 
 export const metadata = {
   metadataBase: new URL(base),
+  icons: {
+    icon: [{ url: '/images/logo-mark.png', type: 'image/png' }],
+    apple: [{ url: '/images/logo-mark.png', type: 'image/png' }],
+  },
   title: {
     default: `MAPLE INFRA & INTERIORS | ${SERVICE_TAGLINE}`,
     template: '%s | MAPLE INFRA & INTERIORS',

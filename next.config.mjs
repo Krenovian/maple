@@ -9,6 +9,16 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/uploads/:path*',
+          destination: '/api/serve-upload/:path*',
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;
