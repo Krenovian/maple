@@ -2,8 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import ImageUpload from './ImageUpload';
+import GalleryUpload from './GalleryUpload';
 import { Field, useAdminMutate, apiJson } from './ui';
-import { getDefaultSiteImages, groupSiteImageFields } from '@/lib/siteImageFields';
+import {
+  getDefaultSiteImages,
+  groupSiteImageFields,
+  parseHeroImages,
+} from '@/lib/siteImageFields';
 
 export default function SiteImagesManager({ initialImages }) {
   const groups = useMemo(() => groupSiteImageFields(), []);
@@ -14,6 +19,14 @@ export default function SiteImagesManager({ initialImages }) {
 
   const setField = (key, value) => {
     setForm((current) => ({ ...current, [key]: value }));
+  };
+
+  const setGalleryField = (key, urls) => {
+    setForm((current) => ({
+      ...current,
+      [key]: JSON.stringify(urls),
+      ...(urls[0] ? { hero_image: urls[0] } : {}),
+    }));
   };
 
   const save = () =>
@@ -63,14 +76,32 @@ export default function SiteImagesManager({ initialImages }) {
                   <strong>{field.label}</strong>
                   <span>{field.usedIn}</span>
                 </div>
-                <Field label="Image">
-                  <ImageUpload
-                    value={form[field.id] || ''}
-                    onChange={(url) => setField(field.id, url)}
-                    folder={field.folder}
-                    label={field.label}
-                  />
-                </Field>
+                {field.galleryId ? (
+                  <Field label="Hero slides">
+                    <GalleryUpload
+                      values={(() => {
+                        const gallery = parseHeroImages(form[field.galleryId]);
+                        if (gallery.length) return gallery;
+                        return form[field.id] ? [form[field.id]] : [];
+                      })()}
+                      onChange={(urls) => setGalleryField(field.galleryId, urls)}
+                      folder={field.folder}
+                      max={field.galleryMax}
+                    />
+                    <p className="ad-upload-meta" style={{ marginTop: '0.5rem' }}>
+                      Add 1–{field.galleryMax} images. Multiple images crossfade on the homepage hero.
+                    </p>
+                  </Field>
+                ) : (
+                  <Field label="Image">
+                    <ImageUpload
+                      value={form[field.id] || ''}
+                      onChange={(url) => setField(field.id, url)}
+                      folder={field.folder}
+                      label={field.label}
+                    />
+                  </Field>
+                )}
                 {field.altId ? (
                   <Field label="Alt text">
                     <input

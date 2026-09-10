@@ -4,51 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import FaqList from '@/components/site/FaqList';
 import { getSiteImages } from '@/lib/siteSettings';
+import { SERVICE_INTEGRATED, SERVICES_PAGE_ROWS } from '@/lib/services';
 
 export const metadata = {
   title: 'Services | MAPLE INFRA & INTERIORS',
   description:
-    'Architecture, engineering, interiors, contracting and consultancy — design, technical expertise and execution from concept through handover.',
+    `${SERVICE_INTEGRATED} — design, technical expertise and execution from concept through handover.`,
 };
-
-const services = [
-  {
-    num: '01',
-    title: 'Architectural Design',
-    features: 'Residential · Commercial · Institutional · Master Planning',
-    imageKey: 'services_01_architecture_image',
-  },
-  {
-    num: '02',
-    title: 'Interior Design',
-    features: 'Residential Interiors · Commercial Interiors · Retail · Hospitality',
-    imageKey: 'services_02_interiors_image',
-  },
-  {
-    num: '03',
-    title: 'Structural & Engineering',
-    features: 'Structural Design · Civil Engineering · MEP Coordination · Technical Drawings',
-    imageKey: 'services_03_engineering_image',
-  },
-  {
-    num: '04',
-    title: 'Project Consultancy',
-    features: 'Planning · Estimation · Approvals · Tendering · Technical Coordination',
-    imageKey: 'services_04_consultancy_image',
-  },
-  {
-    num: '05',
-    title: 'Civil & Structural Contracting',
-    features: 'Construction · RCC · Masonry · Finishes · External Works',
-    imageKey: 'services_05_contracting_image',
-  },
-  {
-    num: '06',
-    title: 'Interior Contracting & Fit-Out',
-    features: 'Interior Execution · Joinery · Ceiling · Flooring · Furniture · Services Coordination',
-    imageKey: 'services_06_interior_contracting_image',
-  },
-];
 
 const STEPS = [
   { n: '01', t: 'Discovery', d: 'Brief workshop, site visit and programme clarification.' },
@@ -60,7 +22,7 @@ const STEPS = [
 const FAQ = [
   {
     q: 'Do you offer end-to-end project delivery?',
-    a: 'Yes. Architecture, engineering, interiors, consultancy and contracting can be commissioned together or individually, depending on the project’s requirements.',
+    a: `Yes. ${SERVICE_INTEGRATED} can be commissioned together or individually, depending on the project’s requirements.`,
   },
   {
     q: 'Where do you undertake projects?',
@@ -99,9 +61,8 @@ export default async function ServicesPage() {
           </h1>
           <p>
             <em>
-              Architecture, engineering, interiors, contracting and consultancy — bringing design,
-              technical expertise and execution together from the first concept through to final
-              handover.
+              {SERVICE_INTEGRATED} — bringing design, technical expertise and execution together
+              from the first concept through to final handover.
             </em>
           </p>
         </div>
@@ -109,7 +70,7 @@ export default async function ServicesPage() {
 
       <section className="section" style={{ paddingTop: 'clamp(2rem, 4vw, 3rem)' }}>
         <div className="dm-wrap">
-          {services.map((s, i) => (
+          {SERVICES_PAGE_ROWS.map((s, i) => (
             <article
               className="dm-service-row reveal-up"
               key={s.num}

@@ -3,12 +3,16 @@ import { siteUrl } from '@/lib/catalog';
 
 export default async function sitemap() {
   const base = siteUrl();
-  const [projects, products] = await Promise.all([
+  const [projects, products, posts] = await Promise.all([
     prisma.project.findMany({ select: { slug: true, updatedAt: true } }),
     prisma.product.findMany({ select: { slug: true, updatedAt: true } }),
+    prisma.post.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+    }),
   ]);
 
-  const staticRoutes = ['', '/about', '/services', '/portfolio', '/products', '/contact', '/privacy', '/terms'].map(
+  const staticRoutes = ['', '/about', '/team', '/blog', '/services', '/portfolio', '/products', '/contact', '/privacy', '/terms'].map(
     (path) => ({
       url: `${base}${path || '/'}`,
       lastModified: new Date(),
@@ -31,5 +35,12 @@ export default async function sitemap() {
     priority: 0.75,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...productRoutes];
+  const postRoutes = posts.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: post.updatedAt,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...productRoutes, ...postRoutes];
 }

@@ -8,7 +8,9 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 const LINKS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/team', label: 'Team' },
   { href: '/portfolio', label: 'Projects' },
+  { href: '/blog', label: 'Journal' },
   { href: '/products', label: 'Shop' },
   { href: '/services', label: 'Services' },
 ];

@@ -3,65 +3,17 @@ import { useLayoutEffect, useRef } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { HOMEPAGE_CAPABILITIES } from '@/lib/services';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SERVICES = [
-  {
-    num: '01',
-    title: 'Architecture',
-    image: '/images/hero.png',
-    desc: 'Architectural design from concept through documentation — residential, commercial and institutional work tailored to site and brief.',
-    tags: ['Concept', 'Planning', 'Documentation'],
-  },
-  {
-    num: '02',
-    title: 'Engineering',
-    image: '/images/bedroom.png',
-    desc: 'Structural and civil engineering with town planning input — buildable, compliant solutions from early design through site.',
-    tags: ['Structure', 'Civil', 'Planning'],
-  },
-  {
-    num: '03',
-    title: 'Interiors',
-    image: '/images/interior.png',
-    desc: 'Interior and retail design with practical layouts, refined finishes and spaces ready for everyday use.',
-    tags: ['Interiors', 'Retail', 'Fit-out'],
-  },
-  {
-    num: '04',
-    title: 'Contracting',
-    image: '/images/pool.png',
-    desc: 'Structural and interior contracting delivered in-house — quality control, clear timelines and accountable site execution.',
-    tags: ['Structure', 'Interiors', 'Site'],
-  },
-  {
-    num: '05',
-    title: 'Consultancy',
-    image: '/images/hero.png',
-    desc: 'Comprehensive consultancy across design, structure and town planning for clients who need expert guidance at every stage.',
-    tags: ['Advice', 'Structure', 'Planning'],
-  },
-];
-
-const CAPABILITY_IMAGE_KEYS = [
-  'capability_architecture_image',
-  'capability_engineering_image',
-  'capability_interiors_image',
-  'capability_contracting_image',
-  'capability_consultancy_image',
-];
-
 export default function Services({ siteImages = {} }) {
   const root = useRef(null);
-  const items = SERVICES.map((service, index) => {
-    const imageKey = CAPABILITY_IMAGE_KEYS[index];
-    return {
-      ...service,
-      image: siteImages[imageKey] || service.image,
-      alt: siteImages[`${imageKey}_alt`] || service.title,
-    };
-  });
+  const items = HOMEPAGE_CAPABILITIES.map((service) => ({
+    ...service,
+    image: siteImages[service.imageKey] || service.image,
+    alt: siteImages[`${service.imageKey}_alt`] || service.title,
+  }));
 
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
@@ -71,7 +23,6 @@ export default function Services({ siteImages = {} }) {
       const mm = gsap.matchMedia();
 
       mm.add('(min-width: 901px)', () => {
-        // Dim the card under only once the next one is clearly in focus.
         cards.forEach((card, i) => {
           if (i === cards.length - 1) return;
           gsap.to(card, {
@@ -107,11 +58,13 @@ export default function Services({ siteImages = {} }) {
         scrollTrigger: { trigger: q('[data-services-head]')[0], start: 'top 85%' },
       });
 
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+
       return () => mm.revert();
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [items.length]);
 
   return (
     <section className="dm-services" ref={root} id="services">
@@ -128,8 +81,13 @@ export default function Services({ siteImages = {} }) {
         </div>
 
         <div className="dm-stack">
-          {items.map((s) => (
-            <article className="dm-stack-card" data-card key={s.num}>
+          {items.map((s, index) => (
+            <article
+              className="dm-stack-card"
+              data-card
+              key={s.num}
+              style={{ '--stack-index': index }}
+            >
               <div className="dm-stack-text">
                 <span className="dm-stack-num">{s.num}</span>
                 <h3>{s.title}</h3>

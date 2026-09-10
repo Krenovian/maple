@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import FaqList from '@/components/site/FaqList';
 import { getSiteImages } from '@/lib/siteSettings';
+import { SERVICE_INTEGRATED, SERVICE_NAMES } from '@/lib/services';
 
 export const metadata = { title: 'About | MAPLE INFRA & INTERIORS' };
 
@@ -44,7 +45,7 @@ const FIGURES = [
   { n: '15', suffix: '+', label: 'Years of experience' },
   { n: '200', suffix: '+', label: 'Projects completed' },
   { n: '13', suffix: '', label: 'Professionals' },
-  { n: '5', suffix: '', label: 'Core services' },
+  { n: String(SERVICE_NAMES.length), suffix: '', label: 'Core services' },
 ];
 
 const TIMELINE = [
@@ -165,7 +166,7 @@ export default async function AboutPage() {
             </p>
             <p className="ab-capability reveal-up">
               <span>Integrated capability</span>
-              Architecture + Engineering + Interiors + Contracting + Consultancy
+              {SERVICE_INTEGRATED}
             </p>
           </div>
           <figure className="dm-figure reveal-clip reveal-right">
@@ -187,6 +188,9 @@ export default async function AboutPage() {
           <p>
             Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru
             and Qatar.
+          </p>
+          <p style={{ marginTop: '1.25rem' }}>
+            <Link href="/team" className="btn btn-outline">Meet the team →</Link>
           </p>
         </div>
       </section>

@@ -1,4 +1,5 @@
 'use client';
+import { SERVICE_INTEGRATED } from '@/lib/services';
 import { useLayoutEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -127,9 +128,8 @@ export default function Closing({
               Build your<br /><em>vision</em>
             </h2>
             <p className="dm-cta-sub" data-cta-fade>
-               Architecture + Engineering + Interiors + Contracting +
-              Consultancy. Based in Maranchery, Malappuram, with projects delivered across
-              Kerala, Bengaluru and Qatar.
+              {SERVICE_INTEGRATED}. Based in Maranchery, Malappuram, with projects delivered
+              across Kerala, Bengaluru and Qatar.
             </p>
             <MagneticButton href="/contact" className="dm-magnetic" data-cta-fade>
               Start a project

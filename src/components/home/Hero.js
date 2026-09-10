@@ -1,5 +1,5 @@
 'use client';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
@@ -12,13 +12,26 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 const NAV = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/team', label: 'Team' },
   { href: '/portfolio', label: 'Projects' },
+  { href: '/blog', label: 'Journal' },
   { href: '/services', label: 'Services' },
 ];
 
-export default function Hero({ heroImage = '/images/hero.png', heroImageAlt = 'Residence by MAPLE INFRA & INTERIORS' }) {
+const HERO_LOOP_MS = 5500;
+
+export default function Hero({
+  heroImage = '/images/hero.png',
+  heroImages = [],
+  heroImageAlt = 'Residence by MAPLE INFRA & INTERIORS',
+}) {
   const root = useRef(null);
   const title = useRef(null);
+  const slides = useMemo(() => {
+    const list = (heroImages?.length ? heroImages : [heroImage]).filter(Boolean);
+    return list.length ? list : ['/images/hero.png'];
+  }, [heroImage, heroImages]);
+  const hasLoop = slides.length > 1;
 
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
@@ -113,19 +126,80 @@ export default function Hero({ heroImage = '/images/hero.png', heroImageAlt = 'R
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [hasLoop, slides.length]);
+
+  useLayoutEffect(() => {
+    if (!hasLoop) return undefined;
+
+    const slideEls = root.current?.querySelectorAll('[data-hero-slide]');
+    if (!slideEls?.length) return undefined;
+
+    let index = 0;
+    let loopTween;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      slideEls.forEach((el, i) => {
+        el.classList.toggle('is-active', i === 0);
+      });
+      return undefined;
+    }
+
+    const show = (next) => {
+      const current = slideEls[index];
+      const upcoming = slideEls[next];
+      if (!current || !upcoming || current === upcoming) return;
+
+      loopTween?.kill();
+      loopTween = gsap
+        .timeline()
+        .to(current, { opacity: 0, duration: 1.4, ease: 'power2.inOut' })
+        .fromTo(
+          upcoming,
+          { opacity: 0, scale: 1.08 },
+          { opacity: 1, scale: 1, duration: 1.8, ease: 'power2.out' },
+          0
+        )
+        .set(current, { scale: 1.08 });
+
+      index = next;
+      slideEls.forEach((el, i) => el.classList.toggle('is-active', i === index));
+    };
+
+    slideEls.forEach((el, i) => {
+      gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: 1 });
+      el.classList.toggle('is-active', i === 0);
+    });
+
+    const timer = window.setInterval(() => {
+      show((index + 1) % slideEls.length);
+    }, HERO_LOOP_MS);
+
+    return () => {
+      window.clearInterval(timer);
+      loopTween?.kill();
+    };
+  }, [hasLoop, slides]);
 
   return (
     <section className="dm-hero" ref={root}>
       <div className="dm-hero-media" data-hero-media>
-        <Image
-          src={heroImage}
-          alt={heroImageAlt}
-          fill
-          priority
-          sizes="100vw"
-          data-hero-img
-        />
+        {slides.map((src, i) => (
+          <div
+            key={`${src}-${i}`}
+            className={`dm-hero-slide${i === 0 ? ' is-active' : ''}`}
+            data-hero-slide
+          >
+            <Image
+              src={src}
+              alt={heroImageAlt}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              data-hero-img
+            />
+          </div>
+        ))}
       </div>
       <div className="dm-hero-veil" data-hero-veil />
       <div className="dm-hero-grain" />

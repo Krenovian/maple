@@ -126,11 +126,17 @@ model ActivityLog {
 }
 
 model Category {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
-  type      String   // PRODUCT | PROJECT
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  type      String     // PRODUCT | PROJECT
+  image     String?
+  imageAlt  String?
+  parentId  String?
+  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryChildren")
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@unique([type, name])
 }
@@ -138,5 +144,36 @@ model Category {
 model SiteSetting {
   key       String   @id
   value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String?
+  content         String
+  image           String?
+  imageAlt        String?
+  authorName      String?
+  published       Boolean   @default(false)
+  publishedAt     DateTime?
+  featured        Boolean   @default(false)
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  image     String?
+  imageAlt  String?
+  sortOrder Int      @default(0)
+  featured  Boolean  @default(true)
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

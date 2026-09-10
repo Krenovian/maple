@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import { siteUrl } from '@/lib/catalog';
+import { SERVICE_INTEGRATED } from '@/lib/services';
 
 function parseGallery(project) {
   const extras = [];
@@ -118,7 +119,7 @@ export default async function ProjectPage({ params }) {
             <p>{project.description}</p>
             <p className="pd-overview-extra">
               Delivered by MAPLE INFRA &amp; INTERIORS — integrated capability across
-              Architecture + Engineering + Interiors + Contracting + Consultancy. Based in
+              {SERVICE_INTEGRATED}. Based in
               Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.
             </p>
             <div className="pd-actions">

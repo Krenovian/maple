@@ -1,3 +1,5 @@
+import { SERVICE_INTEGRATED } from '@/lib/services';
+
 export const HOMEPAGE_CONTENT_FIELDS = [
   {
     id: 'manifesto_eyebrow',
@@ -30,7 +32,7 @@ export const HOMEPAGE_CONTENT_FIELDS = [
     label: 'Intro copy',
     usedIn: 'First text card in the Ethos bento grid',
     defaultValue:
-      'MAPLE INFRA & INTERIORS — formerly DE MAPLE Architects & Engineers — with a team of 13 professionals. Integrated capability: Architecture + Engineering + Interiors + Contracting + Consultancy. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.',
+      `MAPLE INFRA & INTERIORS — formerly DE MAPLE Architects & Engineers — with a team of 13 professionals. Integrated capability: ${SERVICE_INTEGRATED}. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.`,
     multiline: true,
   },
   {
@@ -135,7 +137,7 @@ export const HOMEPAGE_CONTENT_FIELDS = [
     label: 'Closing copy',
     usedIn: 'Second text card in the Ethos bento grid',
     defaultValue:
-      'Quality, innovation and professionalism guide every project — from architectural design and interiors to structural contracting and consultancy. Same trusted team, renewed identity.',
+      'Quality, innovation and professionalism guide every project — from architectural design and interiors to renovation, landscaping, hospitality and contracting. Same trusted team, renewed identity.',
     multiline: true,
   },
   {

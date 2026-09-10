@@ -4,6 +4,7 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import { SERVICE_INTEGRATED } from '@/lib/services';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -13,9 +14,9 @@ const DEFAULT_MANIFESTO = {
   statement:
     'We deliver <em>practical</em>, sustainable and aesthetically refined spaces — tailored to every client.',
   copy1:
-    'MAPLE INFRA & INTERIORS — formerly DE MAPLE Architects & Engineers — with a team of 13 professionals. Integrated capability: Architecture + Engineering + Interiors + Contracting + Consultancy. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.',
+    `MAPLE INFRA & INTERIORS — formerly DE MAPLE Architects & Engineers — with a team of 13 professionals. Integrated capability: ${SERVICE_INTEGRATED}. Based in Maranchery, Malappuram, with projects delivered across Kerala, Bengaluru and Qatar.`,
   copy2:
-    'Quality, innovation and professionalism guide every project — from architectural design and interiors to structural contracting and consultancy. Same trusted team, renewed identity.',
+    'Quality, innovation and professionalism guide every project — from architectural design and interiors to renovation, landscaping, hospitality and contracting. Same trusted team, renewed identity.',
   signature: '— MAPLE INFRA & INTERIORS',
   stats: [
     { value: 200, suffix: '+', label: 'Projects completed' },

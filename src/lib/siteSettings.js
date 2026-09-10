@@ -5,6 +5,8 @@ import {
   DEFAULT_HERO_IMAGE,
   DEFAULT_HERO_IMAGE_ALT,
   getDefaultSiteImages,
+  parseHeroImages,
+  resolveHeroImages,
 } from '@/lib/siteImageFields';
 
 export {
@@ -52,8 +54,10 @@ export async function getSiteImages() {
 
 export async function getHeroSettings() {
   const images = await getSiteImages();
+  const heroImages = resolveHeroImages(images);
   return {
-    heroImage: images.hero_image,
+    heroImage: heroImages[0],
+    heroImages,
     heroImageAlt: images.hero_image_alt,
   };
 }
@@ -84,7 +88,18 @@ export async function setSiteImages(nextValues) {
   const updates = [];
 
   for (const field of SITE_IMAGE_FIELDS) {
-    const url = nextValues[field.id]?.trim() || field.defaultUrl;
+    let url = nextValues[field.id]?.trim() || field.defaultUrl;
+
+    if (field.galleryId) {
+      const gallery = parseHeroImages(nextValues[field.galleryId]);
+      if (gallery.length) {
+        url = gallery[0];
+        updates.push(setSiteSetting(field.galleryId, JSON.stringify(gallery)));
+      } else {
+        updates.push(setSiteSetting(field.galleryId, '[]'));
+      }
+    }
+
     if (!url) throw new Error(`${field.label} image is required`);
 
     updates.push(setSiteSetting(field.id, url));
@@ -101,12 +116,22 @@ export async function setSiteImages(nextValues) {
 
   await Promise.all(updates);
 
-  const removedUrls = SITE_IMAGE_FIELDS.map((field) => field.id)
-    .filter((id) => {
-      const nextUrl = nextValues[id]?.trim() || defaults[id];
-      return current[id] && current[id] !== nextUrl;
-    })
-    .map((id) => current[id]);
+  const removedUrls = [];
+
+  for (const field of SITE_IMAGE_FIELDS) {
+    const nextUrl = nextValues[field.id]?.trim() || defaults[field.id];
+    if (current[field.id] && current[field.id] !== nextUrl) {
+      removedUrls.push(current[field.id]);
+    }
+
+    if (field.galleryId) {
+      const prevGallery = parseHeroImages(current[field.galleryId]);
+      const nextGallery = parseHeroImages(nextValues[field.galleryId]);
+      for (const url of prevGallery) {
+        if (!nextGallery.includes(url)) removedUrls.push(url);
+      }
+    }
+  }
 
   return { images: await getSiteImages(), removedUrls };
 }

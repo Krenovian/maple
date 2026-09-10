@@ -42,8 +42,8 @@ export default function EmployeesManager({ initialEmployees }) {
     <>
       <div className="ad-top">
         <div>
-          <h1>Team</h1>
-          <p>Employee accounts that can access the workspace.</p>
+          <h1>Staff accounts</h1>
+          <p>Employee login accounts for the workspace. For public team photos, use Team profiles.</p>
         </div>
         <div className="ad-actions">
           <button type="button" className="btn btn-sm" onClick={openCreate}>Add Member</button>

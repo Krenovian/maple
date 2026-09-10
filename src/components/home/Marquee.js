@@ -2,15 +2,14 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MARQUEE_WORDS } from '@/lib/services';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const WORDS = ['Architecture', 'Engineering', 'Interiors', 'Contracting', 'Consultancy'];
 
 function Group({ ariaHidden }) {
   return (
     <div className="dm-marquee-group" aria-hidden={ariaHidden}>
-      {WORDS.map((w) => (
+      {MARQUEE_WORDS.map((w) => (
         <span className="dm-marquee-item" key={w}>
           {w}
           <i className="dm-marquee-dot" />

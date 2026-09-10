@@ -113,6 +113,8 @@ export default function Works({ projects = [] }) {
         });
       });
 
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+
       return () => mm.revert();
     }, root);
 

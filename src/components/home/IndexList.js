@@ -10,6 +10,8 @@ const ROWS = [
   { href: '/portfolio', title: 'Portfolio', meta: 'Built work' },
   { href: '/products', title: 'Shop', meta: 'Studio products' },
   { href: '/about', title: 'About', meta: 'Who we are' },
+  { href: '/team', title: 'Team', meta: 'Our people' },
+  { href: '/blog', title: 'Journal', meta: 'Studio notes' },
   { href: '/contact', title: 'Contact', meta: 'Start here' },
 ];
 

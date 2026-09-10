@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FOOTER_SERVICE_NAMES } from '@/lib/services';
 
 const STUDIO = [
   { href: '/about', label: 'About Us' },
+  { href: '/team', label: 'Our Team' },
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/blog', label: 'Journal' },
   { href: '/services', label: 'Services' },
   { href: '/contact', label: 'Start a Project' },
 ];
@@ -32,7 +35,14 @@ export default function Footer() {
               <span>MAPLE INFRA &amp; INTERIORS</span>
             </Link>
             <p className="dm-footer-caps">
-              Architecture · Engineering · Interiors · Contracting · Consultancy
+              {FOOTER_SERVICE_NAMES.map((name, index) => (
+                <span className="dm-footer-cap-item" key={name}>
+                  {name}
+                  {index < FOOTER_SERVICE_NAMES.length - 1 ? (
+                    <span className="dm-footer-cap-sep" aria-hidden="true">·</span>
+                  ) : null}
+                </span>
+              ))}
             </p>
             <p>
               A multidisciplinary design and execution practice creating practical, sustainable

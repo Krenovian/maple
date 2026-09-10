@@ -16,6 +16,7 @@ import IndexList from '@/components/home/IndexList';
 import Closing from '@/components/home/Closing';
 import DecorClub from '@/components/home/DecorClub';
 import { getSiteImages } from '@/lib/siteSettings';
+import { resolveHeroImages } from '@/lib/siteImageFields';
 import { getHomepageContent } from '@/lib/siteContent';
 import { HOMEPAGE_SHOP } from '@/lib/homepageShop';
 
@@ -56,6 +57,7 @@ export default async function HomePage() {
   ]);
 
   const homepageProducts = featuredProducts.slice(0, HOMEPAGE_SHOP.featuredLimit);
+  const heroImages = resolveHeroImages(siteImages);
 
   return (
     <div className="dm-home">
@@ -64,7 +66,11 @@ export default async function HomePage() {
       <Navbar />
 
       <main>
-        <Hero heroImage={siteImages.hero_image} heroImageAlt={siteImages.hero_image_alt} />
+        <Hero
+          heroImage={heroImages[0]}
+          heroImages={heroImages}
+          heroImageAlt={siteImages.hero_image_alt}
+        />
         <Marquee />
         <Manifesto
           content={homepageContent.manifesto}

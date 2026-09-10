@@ -92,7 +92,7 @@ export default function GalleryUpload({
     <div className="ad-gallery">
       <div className="ad-gallery-top">
         <p>
-          Gallery images ({list.length}/{max}). Use ↑↓ to reorder — first is primary in the gallery.
+          Images ({list.length}/{max}). Use ↑↓ to reorder — first image shows first on the site.
         </p>
         <button
           type="button"
@@ -113,7 +113,7 @@ export default function GalleryUpload({
       </div>
 
       {list.length === 0 ? (
-        <p className="ad-gallery-empty">No gallery images yet. Cover image still shows on the hero.</p>
+        <p className="ad-gallery-empty">No images yet. Add at least one image.</p>
       ) : (
         <ul className="ad-gallery-grid">
           {list.map((url, i) => (
