@@ -252,9 +252,18 @@ export function parseHeroImages(value) {
 
 export function resolveHeroImages(images) {
   const gallery = parseHeroImages(images?.[HERO_IMAGES_KEY]);
-  if (gallery.length) return gallery;
-  if (images?.hero_image) return [images.hero_image];
-  return [DEFAULT_HERO_IMAGE];
+  const list = gallery.length
+    ? gallery
+    : images?.hero_image
+      ? [images.hero_image]
+      : [];
+
+  const unique = [];
+  for (const src of list) {
+    if (src && !unique.includes(src)) unique.push(src);
+  }
+
+  return unique.length ? unique : [DEFAULT_HERO_IMAGE];
 }
 
 export function getDefaultSiteImages() {

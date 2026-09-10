@@ -1,6 +1,6 @@
 'use client';
 import { useLayoutEffect, useRef } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
@@ -122,7 +122,7 @@ export default function Manifesto({
           </div>
 
           <figure className="dm-bento-card dm-bento-image" data-figure>
-            <Image
+            <MapleImage
               src={image}
               alt={imageAlt}
               fill

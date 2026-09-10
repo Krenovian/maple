@@ -1,7 +1,7 @@
-import { readFile, stat } from 'fs/promises';
+import { readFile } from 'fs/promises';
 import path from 'path';
 import { NextResponse } from 'next/server';
-import { getUploadAbsolutePath } from '@/lib/localUploads';
+import { resolveExistingUploadPath } from '@/lib/localUploads';
 
 const EXT_MIME = {
   '.jpg': 'image/jpeg',
@@ -19,17 +19,12 @@ export async function GET(_req, { params }) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const absolutePath = getUploadAbsolutePath(`/uploads/${relativePath}`);
+  const absolutePath = await resolveExistingUploadPath(`/uploads/${relativePath}`);
   if (!absolutePath) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
   try {
-    const fileStat = await stat(absolutePath);
-    if (!fileStat.isFile()) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
-
     const bytes = await readFile(absolutePath);
     const ext = path.extname(absolutePath).toLowerCase();
 
@@ -40,9 +35,6 @@ export async function GET(_req, { params }) {
       },
     });
   } catch (err) {
-    if (err.code === 'ENOENT') {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
     console.error('Serve upload error:', err);
     return NextResponse.json({ error: 'Failed to read upload' }, { status: 500 });
   }

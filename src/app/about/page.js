@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import FaqList from '@/components/site/FaqList';
 import { getSiteImages } from '@/lib/siteSettings';
@@ -170,7 +170,7 @@ export default async function AboutPage() {
             </p>
           </div>
           <figure className="dm-figure reveal-clip reveal-right">
-            <Image
+            <MapleImage
               src={siteImages.about_story_image}
               alt={siteImages.about_story_image_alt}
               width={900}

@@ -1,4 +1,4 @@
-import { mkdir, unlink, writeFile } from 'fs/promises';
+import { mkdir, stat, unlink, writeFile } from 'fs/promises';
 import path from 'path';
 import { randomBytes } from 'crypto';
 import { UPLOAD_URL_PREFIX, isManagedUploadUrl } from '@/lib/uploadUrls';
@@ -13,10 +13,20 @@ const MIME_EXT = {
   'image/avif': '.avif',
 };
 
+/** Where new uploads are always written (inside the project). */
 export function getUploadRoot() {
-  const configured = process.env.UPLOAD_ROOT?.trim();
-  if (configured) return path.resolve(configured);
   return path.join(process.cwd(), 'public', 'uploads');
+}
+
+/** All folders checked when serving or deleting an existing upload. */
+export function getUploadSearchRoots() {
+  const roots = [getUploadRoot()];
+  const configured = process.env.UPLOAD_ROOT?.trim();
+  if (configured) {
+    const resolved = path.resolve(configured);
+    if (!roots.includes(resolved)) roots.push(resolved);
+  }
+  return roots;
 }
 
 export function sanitizeUploadFolder(folder = 'maple') {
@@ -26,17 +36,41 @@ export function sanitizeUploadFolder(folder = 'maple') {
     .replace(/^\/+|\/+$/g, '') || 'maple';
 }
 
-export function getUploadAbsolutePath(url) {
+function resolveRelativeUploadPath(url) {
   if (!isManagedUploadUrl(url)) return null;
+  return url.slice(UPLOAD_URL_PREFIX.length).replace(/^\/+/, '');
+}
 
-  const relative = url.slice(UPLOAD_URL_PREFIX.length).replace(/^\/+/, '');
-  const uploadsRoot = path.resolve(getUploadRoot());
+function absoluteForRoot(root, relative) {
+  const uploadsRoot = path.resolve(root);
   const absolute = path.resolve(uploadsRoot, relative);
-
-  if (absolute !== uploadsRoot && !absolute.startsWith(`${uploadsRoot}${path.sep}`)) {
-    return null;
-  }
+  if (absolute === uploadsRoot) return null;
+  if (!absolute.startsWith(`${uploadsRoot}${path.sep}`)) return null;
   return absolute;
+}
+
+export function getUploadAbsolutePath(url) {
+  const relative = resolveRelativeUploadPath(url);
+  if (!relative) return null;
+  return absoluteForRoot(getUploadRoot(), relative);
+}
+
+export async function resolveExistingUploadPath(url) {
+  const relative = resolveRelativeUploadPath(url);
+  if (!relative) return null;
+
+  for (const root of getUploadSearchRoots()) {
+    const absolute = absoluteForRoot(root, relative);
+    if (!absolute) continue;
+    try {
+      const fileStat = await stat(absolute);
+      if (fileStat.isFile()) return absolute;
+    } catch {
+      /* try next root */
+    }
+  }
+
+  return null;
 }
 
 export async function saveUploadedImage({ bytes, mimeType, folder = 'maple' }) {
@@ -54,11 +88,11 @@ export async function saveUploadedImage({ bytes, mimeType, folder = 'maple' }) {
   await writeFile(absolutePath, bytes);
 
   const url = `${UPLOAD_URL_PREFIX}/${safeFolder}/${filename}`;
-  return { url, filename, bytes: bytes.length };
+  return { url, filename, bytes: bytes.length, absolutePath };
 }
 
 export async function deleteUploadedImage(url) {
-  const absolutePath = getUploadAbsolutePath(url);
+  const absolutePath = await resolveExistingUploadPath(url);
   if (!absolutePath) {
     return { deleted: false, skipped: true };
   }

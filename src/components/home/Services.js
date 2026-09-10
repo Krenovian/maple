@@ -1,6 +1,6 @@
 'use client';
 import { useLayoutEffect, useRef } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HOMEPAGE_CAPABILITIES } from '@/lib/services';
@@ -99,7 +99,7 @@ export default function Services({ siteImages = {} }) {
                 </div>
               </div>
               <div className="dm-stack-media">
-                <Image
+                <MapleImage
                   src={s.image}
                   alt={s.alt}
                   width={900}

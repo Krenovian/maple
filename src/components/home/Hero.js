@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
+import { managedUploadImageProps } from '@/lib/imageProps';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -27,11 +28,22 @@ export default function Hero({
 }) {
   const root = useRef(null);
   const title = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const slides = useMemo(() => {
-    const list = (heroImages?.length ? heroImages : [heroImage]).filter(Boolean);
-    return list.length ? list : ['/images/hero.png'];
+    const raw = heroImages?.length ? heroImages : [heroImage];
+    const unique = [];
+    for (const src of raw) {
+      if (src && !unique.includes(src)) unique.push(src);
+    }
+    return unique.length ? unique : ['/images/hero.png'];
   }, [heroImage, heroImages]);
+
   const hasLoop = slides.length > 1;
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [slides]);
 
   useEffect(() => {
     slides.forEach((src) => {
@@ -39,6 +51,17 @@ export default function Hero({
       img.src = src;
     });
   }, [slides]);
+
+  useEffect(() => {
+    if (!hasLoop) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slides.length);
+    }, HERO_LOOP_MS);
+
+    return () => window.clearInterval(timer);
+  }, [hasLoop, slides.length]);
 
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
@@ -48,7 +71,6 @@ export default function Hero({
 
       gsap.set(titleEl, { autoAlpha: 0 });
 
-      // --- Intro, gated on the preloader and on webfonts being measurable ---
       let split;
       const play = () => {
         const build = () => {
@@ -72,8 +94,8 @@ export default function Hero({
               0
             )
             .fromTo(
-              q('[data-hero-slide]')[0]?.querySelector('[data-hero-img]'),
-              { scale: 1.32 },
+              media,
+              { scale: 1.08 },
               { scale: 1, duration: 2.4, ease: 'expo.out' },
               0
             )
@@ -90,7 +112,6 @@ export default function Hero({
 
       const off = onIntroDone(play);
 
-      // --- Scroll: layered parallax + card morph on exit ---
       const mm = gsap.matchMedia();
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap
@@ -133,71 +154,7 @@ export default function Hero({
     }, root);
 
     return () => ctx.revert();
-  }, [hasLoop, slides.length]);
-
-  useLayoutEffect(() => {
-    if (!hasLoop) return undefined;
-
-    const slideEls = root.current?.querySelectorAll('[data-hero-slide]');
-    if (!slideEls?.length) return undefined;
-
-    let index = 0;
-    let loopTween;
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      slideEls.forEach((el, i) => {
-        el.classList.toggle('is-active', i === 0);
-      });
-      return undefined;
-    }
-
-    const show = (next) => {
-      if (next === index) return;
-
-      const current = slideEls[index];
-      const upcoming = slideEls[next];
-      if (!current || !upcoming) return;
-
-      loopTween?.kill();
-      gsap.killTweensOf(slideEls);
-
-      loopTween = gsap.timeline({
-        onComplete: () => {
-          slideEls.forEach((el, i) => {
-            if (i !== next) gsap.set(el, { opacity: 0, scale: 1 });
-          });
-        },
-      });
-
-      loopTween
-        .to(current, { opacity: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
-        .fromTo(
-          upcoming,
-          { opacity: 0, scale: 1.06 },
-          { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' },
-          0
-        );
-
-      index = next;
-      slideEls.forEach((el, i) => el.classList.toggle('is-active', i === index));
-    };
-
-    slideEls.forEach((el, i) => {
-      gsap.set(el, { clearProps: 'opacity,transform' });
-      gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: 1 });
-      el.classList.toggle('is-active', i === 0);
-    });
-
-    const timer = window.setInterval(() => {
-      show((index + 1) % slideEls.length);
-    }, HERO_LOOP_MS);
-
-    return () => {
-      window.clearInterval(timer);
-      loopTween?.kill();
-    };
-  }, [hasLoop, slides]);
+  }, []);
 
   return (
     <section className="dm-hero" ref={root}>
@@ -205,8 +162,9 @@ export default function Hero({
         {slides.map((src, i) => (
           <div
             key={`${src}-${i}`}
-            className={`dm-hero-slide${i === 0 ? ' is-active' : ''}`}
+            className={`dm-hero-slide${i === activeIndex ? ' is-active' : ''}`}
             data-hero-slide
+            aria-hidden={i !== activeIndex}
           >
             <Image
               src={src}
@@ -214,7 +172,7 @@ export default function Hero({
               fill
               priority
               sizes="100vw"
-              unoptimized={src.startsWith('/uploads/')}
+              {...managedUploadImageProps(src)}
               data-hero-img
             />
           </div>
@@ -252,7 +210,6 @@ export default function Hero({
           </div>
         </header>
 
-        {/* Center alignment for GenZ cinematic impact */}
         <div className="dm-hero-center">
           <h1 className="dm-hero-title-massive" ref={title}>
             Crafting
@@ -261,7 +218,6 @@ export default function Hero({
           </h1>
         </div>
 
-        {/* Shop callout */}
         <Link href="/products" className="dm-hero-badge dm-badge-left dm-hero-shop" data-cursor="true">
           <span className="dm-hero-shop-kicker">Shop</span>
           <strong className="dm-hero-shop-title">Studio products</strong>
@@ -269,7 +225,6 @@ export default function Hero({
           <span className="dm-hero-shop-cta">Open shop →</span>
         </Link>
 
-        {/* Orizon-style grouped right badge */}
         <div className="dm-orizon-group">
           <Link href="/products" className="dm-orizon-circle" aria-label="Open shop" data-cursor="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -283,7 +238,6 @@ export default function Hero({
             <span>10°44&apos;N 75°58&apos;E</span>
           </div>
         </div>
-
       </div>
     </section>
   );

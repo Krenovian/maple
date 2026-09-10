@@ -1,6 +1,6 @@
 'use client';
 import { useLayoutEffect, useRef } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -141,7 +141,7 @@ export default function Works({ projects = [] }) {
           {projects.map((project, i) => (
             <article className="dm-feature" data-panel key={project.id}>
               <div className="dm-feature-media">
-                <Image
+                <MapleImage
                   src={project.image}
                   alt={project.title}
                   fill

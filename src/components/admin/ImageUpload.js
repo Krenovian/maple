@@ -1,6 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { compressImageFile } from '@/lib/compressImage';
 import { deleteRemoteImage, isUploadedImageUrl } from '@/lib/deleteRemoteImage';
 
@@ -71,7 +71,7 @@ export default function ImageUpload({
     <div className="ad-upload">
       <div className="ad-upload-preview">
         {value ? (
-          <Image src={value} alt="Preview" fill sizes="160px" style={{ objectFit: 'cover' }} />
+          <MapleImage src={value} alt="Preview" fill sizes="160px" style={{ objectFit: 'cover' }} />
         ) : (
           <span>No image</span>
         )}

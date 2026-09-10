@@ -1,7 +1,7 @@
 'use client';
 import { SERVICE_INTEGRATED } from '@/lib/services';
 import { useLayoutEffect, useRef } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -104,7 +104,7 @@ export default function Closing({
             <div className="dm-quote-by">{testimonial.attribution}</div>
           </div>
           <figure className="dm-quote-figure" data-quote-figure>
-            <Image
+            <MapleImage
               src={quoteImage}
               alt={quoteImageAlt}
               width={900}

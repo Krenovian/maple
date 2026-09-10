@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import FaqList from '@/components/site/FaqList';
 import { getSiteImages } from '@/lib/siteSettings';
 import { SERVICE_INTEGRATED, SERVICES_PAGE_ROWS } from '@/lib/services';
@@ -82,7 +82,7 @@ export default async function ServicesPage() {
                 <p className="dm-service-features">{s.features}</p>
               </div>
               <div className="dm-figure reveal-clip" style={{ aspectRatio: '4 / 3', minHeight: 180 }}>
-                <Image
+                <MapleImage
                   src={siteImages[s.imageKey]}
                   alt={siteImages[`${s.imageKey}_alt`]}
                   width={800}

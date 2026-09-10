@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireStaff } from '@/lib/admin';
 import {
   deleteUploadedImages,
+  getUploadRoot,
+  getUploadSearchRoots,
   isManagedUploadUrl,
   saveUploadedImage,
 } from '@/lib/localUploads';
@@ -14,7 +16,12 @@ const ALLOWED = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', '
 export async function GET() {
   const { error } = await requireStaff();
   if (error) return error;
-  return NextResponse.json({ configured: true, storage: 'local' });
+  return NextResponse.json({
+    configured: true,
+    storage: 'local',
+    writeRoot: getUploadRoot(),
+    readRoots: getUploadSearchRoots(),
+  });
 }
 
 export async function DELETE(req) {
