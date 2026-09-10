@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireStaff, slugify } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import { parseJsonArray, parseSpecs } from '@/lib/catalog';
 import {
   collectEntityImageUrls,
@@ -74,6 +75,8 @@ export async function POST(req) {
       summary: `Created product “${product.name}”`,
     });
 
+    revalidatePublicSite([`/products/${product.slug}`]);
+
     return NextResponse.json(product, { status: 201 });
   } catch (err) {
     console.error(err);
@@ -112,6 +115,8 @@ export async function PUT(req) {
       summary: `Updated product “${product.name}”`,
     });
 
+    revalidatePublicSite([`/products/${product.slug}`]);
+
     return NextResponse.json(product);
   } catch (err) {
     console.error(err);
@@ -141,6 +146,10 @@ export async function DELETE(req) {
       entityId: id,
       summary: `Deleted product “${existing?.name || id}”`,
     });
+
+    revalidatePublicSite(
+      existing?.slug ? [`/products/${existing.slug}`] : []
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {

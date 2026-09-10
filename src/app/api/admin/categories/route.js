@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireStaff } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import {
   getCategoryPath,
   replaceCategoryPathPrefix,
@@ -79,6 +80,8 @@ export async function POST(req) {
       entityId: category.id,
       summary: `Created ${type.toLowerCase()} category “${data.name}”`,
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json(category, { status: 201 });
   } catch (err) {
@@ -170,6 +173,8 @@ export async function PUT(req) {
       summary: `Updated ${existing.type.toLowerCase()} category “${existing.name}”`,
     });
 
+    revalidatePublicSite();
+
     return NextResponse.json(category);
   } catch (err) {
     if (err.code === 'P2002') {
@@ -231,6 +236,8 @@ export async function DELETE(req) {
       entityId: id,
       summary: `Deleted ${existing.type.toLowerCase()} category “${existing.name}”`,
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json({ ok: true });
   } catch (err) {

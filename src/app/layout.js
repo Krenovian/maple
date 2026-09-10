@@ -10,6 +10,11 @@ import { SERVICE_INTEGRATED, SERVICE_TAGLINE } from '@/lib/services';
 
 const base = siteUrl();
 
+// CMS site: always read fresh DB content after admin edits (no static page cache).
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 export const metadata = {
   metadataBase: new URL(base),
   icons: {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import { getHomepageContent, setHomepageContent } from '@/lib/siteContent';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 
 export async function GET() {
   const { error } = await requireAdmin();
@@ -26,6 +27,8 @@ export async function PUT(req) {
       entityId: 'homepage-content',
       summary: 'Updated homepage Ethos and testimonial copy',
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json(content.raw);
   } catch (err) {

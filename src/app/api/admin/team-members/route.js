@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireStaff } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import {
   collectEntityImageUrls,
   collectRemovedUploadUrls,
@@ -51,6 +52,8 @@ export async function POST(req) {
       summary: `Added team member “${member.name}”`,
     });
 
+    revalidatePublicSite();
+
     return NextResponse.json(member, { status: 201 });
   } catch (err) {
     console.error(err);
@@ -91,6 +94,8 @@ export async function PUT(req) {
       summary: `Updated team member “${member.name}”`,
     });
 
+    revalidatePublicSite();
+
     return NextResponse.json(member);
   } catch (err) {
     console.error(err);
@@ -120,6 +125,8 @@ export async function DELETE(req) {
       entityId: id,
       summary: `Removed team member “${existing?.name || id}”`,
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json({ ok: true });
   } catch (err) {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireStaff, slugify } from '@/lib/admin';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import {
   collectEntityImageUrls,
   collectRemovedUploadUrls,
@@ -65,6 +66,8 @@ export async function POST(req) {
       summary: `Created blog post “${post.title}”`,
     });
 
+    revalidatePublicSite([`/blog/${post.slug}`]);
+
     return NextResponse.json(post, { status: 201 });
   } catch (err) {
     console.error(err);
@@ -105,6 +108,8 @@ export async function PUT(req) {
       summary: `Updated blog post “${post.title}”`,
     });
 
+    revalidatePublicSite([`/blog/${post.slug}`]);
+
     return NextResponse.json(post);
   } catch (err) {
     console.error(err);
@@ -134,6 +139,10 @@ export async function DELETE(req) {
       entityId: id,
       summary: `Deleted blog post “${existing?.title || id}”`,
     });
+
+    revalidatePublicSite(
+      existing?.slug ? [`/blog/${existing.slug}`] : []
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {

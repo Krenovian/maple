@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma';
 import PortfolioExplorer from '@/components/site/PortfolioExplorer';
 import { Suspense } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Portfolio | MAPLE INFRA & INTERIORS',
   description:

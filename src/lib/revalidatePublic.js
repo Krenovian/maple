@@ -1,7 +1,12 @@
 import { revalidatePath } from 'next/cache';
 
-/** Bust static caches so CMS edits show on the public site immediately. */
-export function revalidatePublicSite() {
+/**
+ * Bust Next.js route cache after CMS edits so the public site updates immediately.
+ * Uses layout revalidation to cover list pages and nested slugs (/portfolio/foo, etc.).
+ */
+export function revalidatePublicSite(extraPaths = []) {
+  revalidatePath('/', 'layout');
+
   const paths = [
     '/',
     '/about',
@@ -11,9 +16,10 @@ export function revalidatePublicSite() {
     '/blog',
     '/team',
     '/contact',
+    ...extraPaths,
   ];
 
   for (const path of paths) {
-    revalidatePath(path);
+    if (path) revalidatePath(path);
   }
 }

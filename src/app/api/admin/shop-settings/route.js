@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import { getShopSettings, setShopSettings } from '@/lib/shopSettings';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import { deleteUploadUrls, isManagedUploadUrl } from '@/lib/uploadAssets';
 
 export async function GET() {
@@ -32,6 +33,8 @@ export async function PUT(req) {
       entityId: 'shop-settings',
       summary: 'Updated shop promo and homepage section settings',
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json(settings);
   } catch (err) {
