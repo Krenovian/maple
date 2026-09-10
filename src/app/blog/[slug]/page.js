@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }) {
           </div>
           {post.image ? (
             <div className="blog-article-cover">
-              <Image
+              <MapleImage
                 src={post.image}
                 alt={post.imageAlt || post.title}
                 fill

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { managedUploadImageProps } from '@/lib/imageProps';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -166,13 +166,12 @@ export default function Hero({
             data-hero-slide
             aria-hidden={i !== activeIndex}
           >
-            <Image
+            <MapleImage
               src={src}
               alt={heroImageAlt}
               fill
               priority
               sizes="100vw"
-              {...managedUploadImageProps(src)}
               data-hero-img
             />
           </div>

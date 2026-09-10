@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { Modal, Field, useAdminMutate, apiJson } from './ui';
 import ImageUpload from './ImageUpload';
 import { buildCategoryTree, flattenCategoryOptions } from '@/lib/categoryTree';
@@ -21,7 +21,7 @@ function CategoryRow({ category, depth, onEdit, onRemove }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: `${depth * 1.1}rem` }}>
           <div className="ad-thumb round" style={{ width: 44, height: 44, position: 'relative', flexShrink: 0 }}>
             {category.image ? (
-              <Image src={category.image} alt={category.imageAlt || category.name} fill style={{ objectFit: 'cover' }} />
+              <MapleImage src={category.image} alt={category.imageAlt || category.name} fill style={{ objectFit: 'cover' }} />
             ) : (
               <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%', color: 'var(--text-dim)' }}>
                 —

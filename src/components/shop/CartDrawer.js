@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { useCart } from './CartProvider';
 import { openWhatsApp, prepareWhatsAppTab } from '@/lib/whatsapp';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -104,7 +104,7 @@ export default function CartDrawer() {
                 return (
                   <li key={key} className="cart-line">
                     <div className="cart-line-media">
-                      <Image src={item.image} alt={item.name} width={72} height={72} />
+                      <MapleImage src={item.image} alt={item.name} width={72} height={72} />
                     </div>
                     <div className="cart-line-body">
                       <strong>{item.name}</strong>

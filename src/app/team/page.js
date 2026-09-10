@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 
@@ -43,7 +43,7 @@ export default async function TeamPage() {
                 <article className="team-card" key={member.id}>
                   <div className="team-card-photo">
                     {member.image ? (
-                      <Image
+                      <MapleImage
                         src={member.image}
                         alt={member.imageAlt || member.name}
                         fill

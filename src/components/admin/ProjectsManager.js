@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { Pagination, usePagination } from '@/components/Pagination';
 import { Modal, Field, useAdminMutate, apiJson } from './ui';
 import ImageUpload from './ImageUpload';
@@ -170,7 +170,7 @@ export default function ProjectsManager({ initialProjects, employees = [], categ
                 <tr key={p.id}>
                   <td>
                     <div className="ad-thumb">
-                      <Image src={p.image} alt="" fill style={{ objectFit: 'cover' }} />
+                      <MapleImage src={p.image} alt="" fill style={{ objectFit: 'cover' }} />
                     </div>
                   </td>
                   <td>

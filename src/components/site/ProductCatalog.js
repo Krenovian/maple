@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/components/shop/CartProvider';
@@ -160,7 +160,7 @@ export default function ProductCatalog({ products, categories = [] }) {
             <article className="dm-card" key={p.id}>
               <Link href={`/products/${p.slug}`} className="pe-card-btn">
                 <div className="dm-card-media">
-                  <Image src={p.image} alt={p.imageAlt || p.name} width={800} height={550} />
+                  <MapleImage src={p.image} alt={p.imageAlt || p.name} width={800} height={550} />
                 </div>
               </Link>
               <div className="dm-card-body">

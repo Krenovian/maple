@@ -1,6 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { compressImageFile } from '@/lib/compressImage';
 import { deleteRemoteImage, isUploadedImageUrl } from '@/lib/deleteRemoteImage';
 
@@ -119,7 +119,7 @@ export default function GalleryUpload({
           {list.map((url, i) => (
             <li key={`${url}-${i}`} className="ad-gallery-item">
               <div className="ad-gallery-thumb">
-                <Image src={url} alt={`Gallery ${i + 1}`} fill sizes="120px" style={{ objectFit: 'cover' }} />
+                <MapleImage src={url} alt={`Gallery ${i + 1}`} fill sizes="120px" style={{ objectFit: 'cover' }} />
                 {i === 0 && <span className="ad-gallery-badge">1st</span>}
               </div>
               <div className="ad-gallery-item-actions">

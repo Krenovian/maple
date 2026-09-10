@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
@@ -52,7 +52,7 @@ export default function DecorClub({ shop, products = [] }) {
               {products.map((product) => (
                 <article className="tdc-product-card" key={product.id}>
                   <Link href={`/products/${product.slug}`} className="tdc-product-media">
-                    <Image
+                    <MapleImage
                       src={product.image}
                       alt={product.imageAlt || product.name}
                       width={640}

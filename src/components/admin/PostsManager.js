@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { Pagination, usePagination } from '@/components/Pagination';
 import { Modal, Field, useAdminMutate, apiJson } from './ui';
 import ImageUpload from './ImageUpload';
@@ -130,7 +130,7 @@ export default function PostsManager({ initialPosts }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       {post.image ? (
                         <div style={{ position: 'relative', width: 48, height: 48, borderRadius: 8, overflow: 'hidden', flexShrink: 0 }}>
-                          <Image src={post.image} alt="" fill sizes="48px" style={{ objectFit: 'cover' }} />
+                          <MapleImage src={post.image} alt="" fill sizes="48px" style={{ objectFit: 'cover' }} />
                         </div>
                       ) : null}
                       <div>

@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 
 export default function CategoryShowcase({ categories = [] }) {
@@ -16,7 +16,7 @@ export default function CategoryShowcase({ categories = [] }) {
         >
           <div className="tdc-category-media">
             {category.image ? (
-              <Image
+              <MapleImage
                 src={category.image}
                 alt={category.imageAlt || category.name}
                 fill

@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 
 export default function OfferBanner({ settings }) {
@@ -9,7 +9,7 @@ export default function OfferBanner({ settings }) {
   return (
     <div className="tdc-offer-banner tdc-offer-banner--page">
       <div className="tdc-offer-banner-media">
-        <Image
+        <MapleImage
           src={settings.shop_banner_image}
           alt={settings.shop_banner_image_alt}
           fill

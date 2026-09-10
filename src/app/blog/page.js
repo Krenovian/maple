@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 
@@ -55,7 +55,7 @@ export default async function BlogPage() {
                 <Link href={`/blog/${featured.slug}`} className="blog-featured reveal-up">
                   <div className="blog-featured-media">
                     {featured.image ? (
-                      <Image
+                      <MapleImage
                         src={featured.image}
                         alt={featured.imageAlt || featured.title}
                         fill
@@ -85,7 +85,7 @@ export default async function BlogPage() {
                     <Link href={`/blog/${post.slug}`} className="blog-card" key={post.id}>
                       <div className="blog-card-media">
                         {post.image ? (
-                          <Image
+                          <MapleImage
                             src={post.image}
                             alt={post.imageAlt || post.title}
                             fill

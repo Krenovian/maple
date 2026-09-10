@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { Pagination, usePagination } from '@/components/Pagination';
 import { Modal, Field, useAdminMutate, apiJson } from './ui';
 import ImageUpload from './ImageUpload';
@@ -123,7 +123,7 @@ export default function TeamMembersManager({ initialMembers }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{ position: 'relative', width: 48, height: 48, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: 'rgba(255,255,255,0.06)' }}>
                         {member.image ? (
-                          <Image src={member.image} alt="" fill sizes="48px" style={{ objectFit: 'cover' }} />
+                          <MapleImage src={member.image} alt="" fill sizes="48px" style={{ objectFit: 'cover' }} />
                         ) : null}
                       </div>
                       <strong style={{ color: '#fff' }}>{member.name}</strong>

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import gsap from 'gsap';
@@ -119,7 +119,7 @@ function PortfolioStage({ projects }) {
           {projects.map((project, i) => (
             <article className="pe-panel" data-pe-panel key={project.id}>
               <div className="pe-panel-media">
-                <Image
+                <MapleImage
                   src={project.image}
                   alt={project.imageAlt || project.title}
                   fill
@@ -455,7 +455,7 @@ export default function PortfolioExplorer({ projects }) {
               <article className="dm-card" key={p.id}>
                 <Link href={`/portfolio/${p.slug}`} className="pe-card-btn">
                   <div className="dm-card-media">
-                    <Image src={p.image} alt={p.imageAlt || p.title} width={800} height={550} />
+                    <MapleImage src={p.image} alt={p.imageAlt || p.title} width={800} height={550} />
                   </div>
                   <div className="dm-card-body">
                     <h3>{p.title}</h3>

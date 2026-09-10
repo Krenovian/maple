@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { useCart } from '@/components/shop/CartProvider';
 import { useWishlist } from '@/components/shop/WishlistProvider';
@@ -72,7 +72,7 @@ export default function ProductDetailClient({ product, gallery, specs, related }
       <div className="pd-shop">
         <div className="pd-shop-gallery">
           <div className="pd-shop-main">
-            <Image
+            <MapleImage
               src={images[active] || product.image}
               alt={alt}
               fill
@@ -90,7 +90,7 @@ export default function ProductDetailClient({ product, gallery, specs, related }
                   className={`pd-shop-thumb ${active === i ? 'is-active' : ''}`}
                   onClick={() => setActive(i)}
                 >
-                  <Image src={src} alt="" width={120} height={90} style={{ objectFit: 'cover' }} />
+                  <MapleImage src={src} alt="" width={120} height={90} style={{ objectFit: 'cover' }} />
                 </button>
               ))}
             </div>
@@ -189,7 +189,7 @@ export default function ProductDetailClient({ product, gallery, specs, related }
                 <article className="dm-card" key={p.id}>
                   <Link href={`/products/${p.slug}`}>
                     <div className="dm-card-media">
-                      <Image src={p.image} alt={p.imageAlt || p.name} width={800} height={550} />
+                      <MapleImage src={p.image} alt={p.imageAlt || p.name} width={800} height={550} />
                     </div>
                     <div className="dm-card-body">
                       <h3>{p.name}</h3>

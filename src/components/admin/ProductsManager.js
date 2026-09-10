@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import { Pagination, usePagination } from '@/components/Pagination';
 import { Modal, Field, useAdminMutate, apiJson } from './ui';
 import ImageUpload from './ImageUpload';
@@ -192,7 +192,7 @@ export default function ProductsManager({ initialProducts, categories = [] }) {
                 <tr key={p.id}>
                   <td>
                     <div className="ad-thumb round">
-                      <Image src={p.image} alt={p.imageAlt || ''} fill style={{ objectFit: 'cover' }} />
+                      <MapleImage src={p.image} alt={p.imageAlt || ''} fill style={{ objectFit: 'cover' }} />
                     </div>
                   </td>
                   <td><strong style={{ color: '#fff' }}>{p.name}</strong></td>

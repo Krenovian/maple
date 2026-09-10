@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Image from 'next/image';
+import MapleImage from '@/components/MapleImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
@@ -88,7 +88,7 @@ export default async function ProjectPage({ params }) {
 
       <header className="pd-hero">
         <div className="pd-hero-media">
-          <Image
+          <MapleImage
             src={project.image}
             alt={project.imageAlt || project.title}
             fill
@@ -159,7 +159,7 @@ export default async function ProjectPage({ params }) {
                   key={`${src}-${i}`}
                   className={`pd-gallery-item reveal-clip ${i === 0 ? 'is-wide' : ''}`}
                 >
-                  <Image
+                  <MapleImage
                     src={src}
                     alt={`${project.title} — image ${i + 1}`}
                     width={i === 0 ? 1400 : 900}
@@ -200,7 +200,7 @@ export default async function ProjectPage({ params }) {
               {related.map((p) => (
                 <Link href={`/portfolio/${p.slug}`} className="dm-card pd-related-card" key={p.id}>
                   <div className="dm-card-media">
-                    <Image src={p.image} alt={p.title} width={800} height={550} />
+                    <MapleImage src={p.image} alt={p.title} width={800} height={550} />
                   </div>
                   <div className="dm-card-body">
                     <h3>{p.title}</h3>
