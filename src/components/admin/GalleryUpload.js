@@ -11,6 +11,8 @@ export default function GalleryUpload({
   max = 12,
 }) {
   const inputRef = useRef(null);
+  const replaceRef = useRef(null);
+  const [replaceIndex, setReplaceIndex] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [progress, setProgress] = useState('');
@@ -88,6 +90,48 @@ export default function GalleryUpload({
     setList(next);
   };
 
+  const replaceAt = async (index, fileList) => {
+    const file = Array.from(fileList || [])[0];
+    if (!file || index < 0 || index >= list.length) return;
+
+    const previous = list[index];
+    setUploading(true);
+    setError('');
+    setProgress(`Replacing slide ${index + 1}…`);
+
+    try {
+      const compressed = await compressImageFile(file);
+      const body = new FormData();
+      body.append('file', compressed);
+      body.append('folder', folder);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+      const next = [...list];
+      next[index] = data.url;
+      setList(next);
+
+      if (isUploadedImageUrl(previous) && previous !== data.url) {
+        try {
+          await deleteRemoteImage(previous);
+        } catch {
+          /* saved on next site-images save */
+        }
+      }
+
+      setProgress(`Replaced slide ${index + 1}`);
+      setTimeout(() => setProgress(''), 1600);
+    } catch (err) {
+      setError(err.message || 'Replace failed');
+      setProgress('');
+    } finally {
+      setUploading(false);
+      setReplaceIndex(null);
+      if (replaceRef.current) replaceRef.current.value = '';
+    }
+  };
+
   return (
     <div className="ad-gallery">
       <div className="ad-gallery-top">
@@ -110,6 +154,13 @@ export default function GalleryUpload({
           hidden
           onChange={(e) => uploadFiles(e.target.files)}
         />
+        <input
+          ref={replaceRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+          hidden
+          onChange={(e) => replaceAt(replaceIndex, e.target.files)}
+        />
       </div>
 
       {list.length === 0 ? (
@@ -123,6 +174,16 @@ export default function GalleryUpload({
                 {i === 0 && <span className="ad-gallery-badge">1st</span>}
               </div>
               <div className="ad-gallery-item-actions">
+                <button
+                  type="button"
+                  disabled={uploading}
+                  onClick={() => {
+                    setReplaceIndex(i);
+                    replaceRef.current?.click();
+                  }}
+                >
+                  Replace
+                </button>
                 <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move earlier">↑</button>
                 <button type="button" onClick={() => move(i, 1)} disabled={i === list.length - 1} aria-label="Move later">↓</button>
                 <button type="button" className="danger" onClick={() => removeAt(i)} aria-label="Remove">×</button>

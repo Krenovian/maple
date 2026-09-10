@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import { getSiteImages, setSiteImages } from '@/lib/siteSettings';
 import { logActivity } from '@/lib/activity';
+import { revalidatePublicSite } from '@/lib/revalidatePublic';
 import { deleteUploadUrls, isManagedUploadUrl } from '@/lib/uploadAssets';
 
 export async function GET() {
@@ -32,6 +33,8 @@ export async function PUT(req) {
       entityId: 'site-images',
       summary: 'Updated site section images',
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json(images);
   } catch (err) {

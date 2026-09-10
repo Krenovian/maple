@@ -20,6 +20,8 @@ import { resolveHeroImages } from '@/lib/siteImageFields';
 import { getHomepageContent } from '@/lib/siteContent';
 import { HOMEPAGE_SHOP } from '@/lib/homepageShop';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [projects, siteImages, homepageContent, featuredProducts] = await Promise.all([
     prisma.project.findMany({

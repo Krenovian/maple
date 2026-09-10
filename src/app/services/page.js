@@ -12,6 +12,8 @@ export const metadata = {
     `${SERVICE_INTEGRATED} — design, technical expertise and execution from concept through handover.`,
 };
 
+export const dynamic = 'force-dynamic';
+
 const STEPS = [
   { n: '01', t: 'Discovery', d: 'Brief workshop, site visit and programme clarification.' },
   { n: '02', t: 'Design', d: 'Architecture and interiors developed with engineering input.' },

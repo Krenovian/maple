@@ -8,6 +8,8 @@ import { SERVICE_INTEGRATED, SERVICE_NAMES } from '@/lib/services';
 
 export const metadata = { title: 'About | MAPLE INFRA & INTERIORS' };
 
+export const dynamic = 'force-dynamic';
+
 const VALUES = [
   {
     num: '01',

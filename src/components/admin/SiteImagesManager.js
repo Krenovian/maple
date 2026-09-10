@@ -31,12 +31,13 @@ export default function SiteImagesManager({ initialImages }) {
 
   const save = () =>
     run(async () => {
-      await apiJson('/api/admin/site-settings', {
+      const images = await apiJson('/api/admin/site-settings', {
         method: 'PUT',
         body: JSON.stringify(form),
       });
-      setSaved('Site images updated.');
-      setTimeout(() => setSaved(''), 2500);
+      setForm(images);
+      setSaved('Site images saved. The homepage will update within a few seconds.');
+      setTimeout(() => setSaved(''), 4000);
     });
 
   const resetDefaults = () => {
