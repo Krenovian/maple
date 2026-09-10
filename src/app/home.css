@@ -253,11 +253,13 @@
   position: absolute;
   inset: 0;
   opacity: 0;
+  z-index: 0;
   will-change: opacity, transform;
 }
 
 .dm-hero-slide.is-active {
   opacity: 1;
+  z-index: 1;
 }
 
 .dm-hero-media img {

@@ -1,5 +1,5 @@
 'use client';
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
@@ -33,6 +33,13 @@ export default function Hero({
   }, [heroImage, heroImages]);
   const hasLoop = slides.length > 1;
 
+  useEffect(() => {
+    slides.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, [slides]);
+
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
       const q = self.selector;
@@ -65,7 +72,7 @@ export default function Hero({
               0
             )
             .fromTo(
-              q('[data-hero-img]'),
+              q('[data-hero-slide]')[0]?.querySelector('[data-hero-img]'),
               { scale: 1.32 },
               { scale: 1, duration: 2.4, ease: 'expo.out' },
               0
@@ -146,27 +153,38 @@ export default function Hero({
     }
 
     const show = (next) => {
+      if (next === index) return;
+
       const current = slideEls[index];
       const upcoming = slideEls[next];
-      if (!current || !upcoming || current === upcoming) return;
+      if (!current || !upcoming) return;
 
       loopTween?.kill();
-      loopTween = gsap
-        .timeline()
-        .to(current, { opacity: 0, duration: 1.4, ease: 'power2.inOut' })
+      gsap.killTweensOf(slideEls);
+
+      loopTween = gsap.timeline({
+        onComplete: () => {
+          slideEls.forEach((el, i) => {
+            if (i !== next) gsap.set(el, { opacity: 0, scale: 1 });
+          });
+        },
+      });
+
+      loopTween
+        .to(current, { opacity: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
         .fromTo(
           upcoming,
-          { opacity: 0, scale: 1.08 },
-          { opacity: 1, scale: 1, duration: 1.8, ease: 'power2.out' },
+          { opacity: 0, scale: 1.06 },
+          { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' },
           0
-        )
-        .set(current, { scale: 1.08 });
+        );
 
       index = next;
       slideEls.forEach((el, i) => el.classList.toggle('is-active', i === index));
     };
 
     slideEls.forEach((el, i) => {
+      gsap.set(el, { clearProps: 'opacity,transform' });
       gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: 1 });
       el.classList.toggle('is-active', i === 0);
     });
@@ -194,8 +212,9 @@ export default function Hero({
               src={src}
               alt={heroImageAlt}
               fill
-              priority={i === 0}
+              priority
               sizes="100vw"
+              unoptimized={src.startsWith('/uploads/')}
               data-hero-img
             />
           </div>
